@@ -1,0 +1,9 @@
+{
+    "host" : "Localhost",
+    "port" : 3306,
+    "database" : {
+        "user" : "root",
+        "password" : "dolphR0ot",
+        "name" : "servicio-medicina"
+    }
+}
