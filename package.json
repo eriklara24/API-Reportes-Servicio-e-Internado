@@ -2,10 +2,11 @@
   "name": "medicine-service-app",
   "version": "0.0.1",
   "description": "App for social service registration on healt science careers.",
-  "main": "prueba.js",
+  "main": "App.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "start-dev": "ts-node-dev --respawn ./App.ts"
   },
   "repository": {
     "type": "git",
@@ -37,6 +38,7 @@
     "@types/node": "^15.9.0",
     "@typescript-eslint/eslint-plugin": "^4.25.0",
     "@typescript-eslint/parser": "^4.25.0",
-    "eslint": "^7.27.0"
+    "eslint": "^7.27.0",
+    "ts-node-dev": "^1.1.8"
   }
 }
