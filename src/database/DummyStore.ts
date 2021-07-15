@@ -1,18 +1,12 @@
 import mysql = require('mysql');
-import config = require('../../../../configuration.json');
-import Dummy from '../../../resources/entities/Dummy';
+import Dummy from '../resources/entities/Dummy';
+import ItemNotFound from './errors/ItemNotFound';
 
 export default class DummyStore {
     private connection : mysql.Connection;
 
-    constructor() {
-      this.connection = mysql.createConnection({
-        host: config.host,
-        user: config.database.user,
-        password: config.database.password,
-        database: config.database.name,
-      });
-
+    constructor(databaseConfig: any) {
+      this.connection = mysql.createConnection(databaseConfig);
       this.connection.connect((err) => {
         if (err) throw err;
       });
@@ -25,7 +19,7 @@ export default class DummyStore {
         if (error) {
           throw error;
         }
-        return callback(null, 'Dummy created!');
+        return callback('Dummy created!', null);
       });
     }
 
@@ -38,7 +32,7 @@ export default class DummyStore {
           if (error) {
             throw error;
           }
-          return callback(null, `Dummy updated: ${res.message}`);
+          return callback(`Dummy updated: ${res.message}`, null);
         });
     }
 
@@ -46,14 +40,14 @@ export default class DummyStore {
     getDummy(id : number, callback : Function) {
       const select = 'SELECT * FROM dummy WHERE id = ?';
       this.connection.query(select, [String(id)], (error, res) => {
-        if (error) {
+        if (error || res.length < 1) {
           throw error;
         }
         if (res.length < 1) {
-          return callback('The Dummy id does not exists', null);
+          return callback(null, new ItemNotFound());
         }
         const dummyData = new Dummy(res[0].id, res[0].dummy);
-        return callback(null, dummyData);
+        return dummyData;
       });
     }
 
@@ -64,7 +58,7 @@ export default class DummyStore {
         if (error) {
           throw error;
         }
-        return callback(null, `Dummy deleted: ${res.message}`);
+        return callback(`Dummy deleted: ${res.message}`, null);
       });
     }
 }
