@@ -40,3 +40,7 @@ database.dummyStore.deleteDummy(5, (err, res) => {
     console.log(res);
   }
 });
+
+appRouter.listen(config.host, config.port, () => {
+  console.log(`API Reporetes Servicio e Internado corriendo ${config.host}:${config.port}`);
+});

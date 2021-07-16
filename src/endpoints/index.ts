@@ -1,6 +1,11 @@
+import adminRouter from './admin';
+import publicRouter from './public';
+
 const express = require('express');
 
 const appRouter = express.Router();
 
-app.use('/admin', adminRouter);
-app.use('/public', publicRouter);
+appRouter.use('/admin', adminRouter);
+appRouter.use('/public', publicRouter);
+
+export default appRouter;
