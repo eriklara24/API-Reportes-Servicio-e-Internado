@@ -1,6 +1,8 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable no-useless-catch */
 import mysql = require('mysql');
 import Usuario from '../resources/entities/Usuario';
+import ItemNotFound from './errors/ItemNotFound';
 
 export default class AlmacenarUsuario {
     private conection: mysql.Connection;
@@ -16,21 +18,32 @@ export default class AlmacenarUsuario {
       const insert = 'INSERT INTO usuario(id, rol) VALUES (?, ?)';
       try {
         await this.conection.query(insert, [String(usuario.getId()), usuario.getRol()]);
-        console.log('usuario Creado');
       } catch (err) {
-        console.log(err);
         throw (err);
       }
     }
-    
-    async obtenerUsuario(id: number) {
+
+    async obtenerUsuario(id: number): Promise<Usuario> {
       const select = 'SELECT * FROM usuario WHERE id=?';
-      try {
-        return await this.conection.query(select, [id], (err, res) => {console.log(res)});
-      } catch (err) {
-        console.log(err);
-        throw (err);
-      }
+      const dataUsuario: any = await new Promise((resolve, reject) => {
+        this.conection.query(select, [String(id)], (err, res) => {
+          if (err) {
+            throw err;
+          }
+          if (res.length < 1) {
+            reject(new ItemNotFound());
+          }
+          const usuario = new Usuario(res[0].id, res[0].rol);
+          resolve(usuario);
+        });
+      });
+
+      const nuevoUsuario: Usuario = new Usuario(
+        dataUsuario.id,
+        dataUsuario.rol,
+      );
+
+      return nuevoUsuario;
     }
 
     async actualizarUsuario(usuario: Usuario) {
@@ -39,9 +52,7 @@ export default class AlmacenarUsuario {
         await this.conection.query(
           update, [String(usuario.getId()), usuario.getRol(), String(usuario.getId())],
         );
-        console.log('usuario Actualizado');
       } catch (err) {
-        console.log(err);
         throw (err);
       }
     }
@@ -50,9 +61,7 @@ export default class AlmacenarUsuario {
       const del = 'DELETE FROM usuario WHERE id=?';
       try {
         await this.conection.query(del, [id]);
-        console.log('usuario Eliminado');
       } catch (err) {
-        console.log(err);
         throw (err);
       }
     }

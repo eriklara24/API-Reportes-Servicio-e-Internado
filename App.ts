@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable no-console */
 import config = require('./configuration.json');
 import database from './src/database/index';
@@ -6,18 +7,23 @@ import APIServer from './src/endpoints/index';
 import Dummy from './src/resources/entities/Dummy';
 import Usuario from './src/resources/entities/Usuario';
 
-/** Funciones para almacenarUsuario */
+// /** Funciones para almacenarUsuario */
 // // Crear
 // database.almacenarUsuario.crearUsuario(new Usuario(4, 'revisor'));
 // // Obtener
-// database.almacenarUsuario.obtenerUsuario(4);
+// const PromesaUsuario = database.almacenarUsuario.obtenerUsuario(4);
+// PromesaUsuario.then((usuario) => {
+//   console.log(usuario);
+// });
 // // Actualizar
 // database.almacenarUsuario.actualizarUsuario(new Usuario(4, 'administrador'));
-// database.almacenarUsuario.obtenerUsuario(4);
+// // Obtener x2
+// const PromesaUsuarioActualizado = database.almacenarUsuario.obtenerUsuario(4);
+// PromesaUsuarioActualizado.then((usuario) => {
+//   console.log(usuario);
+// });
 // // Eliminar
 // database.almacenarUsuario.eliminarUsuario(4);
-
-
 
 /* DummyStore Functions */
 // Create
