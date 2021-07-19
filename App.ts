@@ -4,6 +4,20 @@ import database from './src/database/index';
 import APIServer from './src/endpoints/index';
 
 import Dummy from './src/resources/entities/Dummy';
+import Usuario from './src/resources/entities/Usuario';
+
+/** Funciones para almacenarUsuario */
+// // Crear
+// database.almacenarUsuario.crearUsuario(new Usuario(4, 'revisor'));
+// // Obtener
+// database.almacenarUsuario.obtenerUsuario(4);
+// // Actualizar
+// database.almacenarUsuario.actualizarUsuario(new Usuario(4, 'administrador'));
+// database.almacenarUsuario.obtenerUsuario(4);
+// // Eliminar
+// database.almacenarUsuario.eliminarUsuario(4);
+
+
 
 /* DummyStore Functions */
 // Create

@@ -1,9 +1,12 @@
 import config = require('../../configuration.json');
 import DummyStore from './DummyStore';
+import AlmacenarUsuario from './AlmacenarUsuario';
 
 class Database {
   // Esto esta así xq después vamos a añadir mas stores en este archivo
   dummyStore: DummyStore;
+
+  almacenarUsuario: AlmacenarUsuario;
 
   constructor() {
     const databaseConfig = {
@@ -14,6 +17,7 @@ class Database {
     };
 
     this.dummyStore = new DummyStore(databaseConfig);
+    this.almacenarUsuario = new AlmacenarUsuario(databaseConfig);
   }
 }
 
