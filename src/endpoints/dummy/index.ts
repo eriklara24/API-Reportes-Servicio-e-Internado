@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import obtenerPorID from './obtenerPorID';
 
 const express = require('express');

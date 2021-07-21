@@ -1,12 +1,16 @@
+/* eslint-disable linebreak-style */
 import config = require('../../configuration.json');
 import DummyStore from './DummyStore';
 import AlmacenarUsuario from './AlmacenarUsuario';
+import AlmacenarTrimestre from './AlmacenarTrimestre';
 
 class Database {
   // Esto esta así xq después vamos a añadir mas stores en este archivo
   dummyStore: DummyStore;
 
   almacenarUsuario: AlmacenarUsuario;
+
+  almacenarTrimestre: AlmacenarTrimestre;
 
   constructor() {
     const databaseConfig = {
@@ -18,6 +22,7 @@ class Database {
 
     this.dummyStore = new DummyStore(databaseConfig);
     this.almacenarUsuario = new AlmacenarUsuario(databaseConfig);
+    this.almacenarTrimestre = new AlmacenarTrimestre(databaseConfig);
   }
 }
 

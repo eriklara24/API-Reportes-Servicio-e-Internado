@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 // El parámetro req o request puede contener cualquier cosa, por ahora contiene lo default,
 // pero puede que después lo personlizemos para solictar a front que nos mande cierto formato,
 // con mas campos
