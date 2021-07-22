@@ -14,55 +14,79 @@ export default class AlmacenarUsuario {
       });
     }
 
-    async crearUsuario(usuario: Usuario) {
-      const insert = 'INSERT INTO usuario(id, rol) VALUES (?, ?)';
-      try {
-        await this.conection.query(insert, [String(usuario.getId()), usuario.getRol()]);
-      } catch (err) {
-        throw (err);
-      }
-    }
-
-    async obtenerUsuario(id: number): Promise<Usuario> {
-      const select = 'SELECT * FROM usuario WHERE id=?';
-      const dataUsuario: any = await new Promise((resolve, reject) => {
-        this.conection.query(select, [String(id)], (err, res) => {
+    async crearUsuario(usuario: Usuario): Promise<Usuario> {
+      const query = 'INSERT INTO usuario(id, rol) VALUES (?, ?)';
+      const args = [
+        String(usuario.getId()),
+        usuario.getRol(),
+      ];
+      const promesaUsuario: any = await new Promise((resolve, reject) => {
+        this.conection.query(query, args, (err) => {
           if (err) {
-            throw err;
+            reject(err);
+          } else {
+            resolve(usuario);
           }
-          if (res.length < 1) {
-            reject(new ItemNotFound());
-          }
-          const usuario = new Usuario(res[0].id, res[0].rol);
-          resolve(usuario);
         });
       });
 
-      const nuevoUsuario: Usuario = new Usuario(
-        dataUsuario.id,
-        dataUsuario.rol,
-      );
-
-      return nuevoUsuario;
+      return promesaUsuario;
     }
 
-    async actualizarUsuario(usuario: Usuario) {
-      const update = 'UPDATE usuario SET id=?, rol=? WHERE id=?';
-      try {
-        await this.conection.query(
-          update, [String(usuario.getId()), usuario.getRol(), String(usuario.getId())],
-        );
-      } catch (err) {
-        throw (err);
-      }
+    async obtenerUsuario(id: number): Promise<Usuario> {
+      const query = 'SELECT * FROM usuario WHERE id=?';
+      const promesaUsuario: any = await new Promise((resolve, reject) => {
+        this.conection.query(query, [String(id)], (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.length < 1) {
+            reject(new ItemNotFound());
+          } else {
+            const usuario = new Usuario(res[0].id, res[0].rol);
+            resolve(usuario);
+          }
+        });
+      });
+
+      return promesaUsuario;
     }
 
-    async eliminarUsuario(id: number) {
-      const del = 'DELETE FROM usuario WHERE id=?';
-      try {
-        await this.conection.query(del, [id]);
-      } catch (err) {
-        throw (err);
-      }
+    async actualizarUsuario(usuario: Usuario): Promise<Usuario> {
+      const query = 'UPDATE usuario SET id=?, rol=? WHERE id=?';
+      const args = [
+        String(usuario.getId()),
+        usuario.getRol(),
+        String(usuario.getId()),
+      ];
+      const promesaUsuario: any = await new Promise((resolve, reject) => {
+        this.conection.query(query, args, (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.affectedRows < 1) {
+            reject(new ItemNotFound());
+          } else {
+            resolve(usuario);
+          }
+        });
+      });
+
+      return promesaUsuario;
+    }
+
+    async eliminarUsuario(id: number): Promise<Usuario> {
+      const query = 'DELETE FROM usuario WHERE id=?';
+      const promesaUsuario: any = await new Promise((resolve, reject) => {
+        this.conection.query(query, [String(id)], (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.affectedRows < 1) {
+            reject(new ItemNotFound());
+          } else {
+            resolve(true);
+          }
+        });
+      });
+
+      return promesaUsuario;
     }
 }

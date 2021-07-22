@@ -14,87 +14,101 @@ export default class AlmacenarReporteFinalDos {
       });
     }
 
-    async crearReporteFinalDos(reporteFinalDos: ReporteFinalDos) {
-      const insert = 'INSERT INTO reporte_final'
-          + ' (id, meta_alcanzada, metodologia, innovacion, conclusion, propuestas, servicio_id)'
+    async crearReporteFinalDos(reporteFinalDos: ReporteFinalDos): Promise<ReporteFinalDos> {
+      const query = 'INSERT INTO reporte_final'
+          + ' (id, servicio_id, meta_alcanzada, metodologia, innovacion, conclusion, propuestas)'
           + ' VALUES (?, ?, ?, ?, ?, ?, ?)';
-      try {
-        await this.conection.query(insert, [
-          String(reporteFinalDos.id),
-          reporteFinalDos.metaAlcanzada,
-          reporteFinalDos.metodologiaUtilizada,
-          reporteFinalDos.innovacionAportada,
-          reporteFinalDos.conclusiones,
-          reporteFinalDos.propuestas,
-          reporteFinalDos.idServicio,
-        ]);
-      } catch (err) {
-        throw (err);
-      }
-    }
-
-    async obtenerReporteFinalDos(id: number): Promise<ReporteFinalDos> {
-      const select = 'SELECT * FROM reporte_final WHERE id=?';
-      const dataReporteFinalDos: any = await new Promise((resolve, reject) => {
-        this.conection.query(select, [String(id)], (err, res) => {
+      const args = [
+        String(reporteFinalDos.id),
+        reporteFinalDos.idServicio,
+        reporteFinalDos.metaAlcanzada,
+        reporteFinalDos.metodologiaUtilizada,
+        reporteFinalDos.innovacionAportada,
+        reporteFinalDos.conclusiones,
+        reporteFinalDos.propuestas,
+      ];
+      const promesaReporteFinalDos: any = await new Promise((resolve, reject) => {
+        this.conection.query(query, args, (err) => {
           if (err) {
-            throw err;
+            reject(err);
+          } else {
+            resolve(reporteFinalDos);
           }
-          if (res.length < 1) {
-            reject(new ItemNotFound());
-          }
-          const reporteFinalDos = {
-            id: res[0].id,
-            metaAlcanzada: res[0].meta_alcanzada,
-            metodologiaUtilizada: res[0].metodologia,
-            innovacionAportada: res[0].innovacion,
-            conclusiones: res[0].conclusion,
-            propuestas: res[0].propuestas,
-            idServicio: res[0].servicio_id,
-          };
-          resolve(reporteFinalDos);
         });
       });
 
-      const nuevoReporteFinalDos = {
-        id: dataReporteFinalDos.id,
-        metaAlcanzada: dataReporteFinalDos.metaAlcanzada,
-        metodologiaUtilizada: dataReporteFinalDos.metodologiaUtilizada,
-        innovacionAportada: dataReporteFinalDos.innovacionAportada,
-        conclusiones: dataReporteFinalDos.conclusiones,
-        propuestas: dataReporteFinalDos.propuestas,
-        idServicio: dataReporteFinalDos.idServicio,
-      };
-
-      return nuevoReporteFinalDos;
+      return promesaReporteFinalDos;
     }
 
-    async actualizarReporteFinalDos(reporteFinalDos: ReporteFinalDos) {
-      const update = 'UPDATE reporte_final'
-        + ' SET id=?, meta_alcanzada=?, metodologia=?, innovacion=?, conclusion=?, propuestas=?, servicio_id=?'
+    async obtenerReporteFinalDos(id: number): Promise<ReporteFinalDos> {
+      const query = 'SELECT * FROM reporte_final WHERE id=?';
+      const promesaReporteFinalDos: any = await new Promise((resolve, reject) => {
+        this.conection.query(query, [String(id)], (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.length < 1) {
+            reject(new ItemNotFound());
+          } else {
+            const reporteFinalDos = {
+              id: res[0].id,
+              idServicio: res[0].servicio_id,
+              metaAlcanzada: res[0].meta_alcanzada,
+              metodologiaUtilizada: res[0].metodologia,
+              innovacionAportada: res[0].innovacion,
+              conclusiones: res[0].conclusion,
+              propuestas: res[0].propuestas,
+            };
+            resolve(reporteFinalDos);
+          }
+        });
+      });
+
+      return promesaReporteFinalDos;
+    }
+
+    async actualizarReporteFinalDos(reporteFinalDos: ReporteFinalDos): Promise<ReporteFinalDos> {
+      const query = 'UPDATE reporte_final'
+        + ' SET id=?, servicio_id=?, meta_alcanzada=?, metodologia=?, innovacion=?, conclusion=?, propuestas=?'
         + ' WHERE id=?';
-      try {
-        await this.conection.query(update, [
-          String(reporteFinalDos.id),
-          reporteFinalDos.metaAlcanzada,
-          reporteFinalDos.metodologiaUtilizada,
-          reporteFinalDos.innovacionAportada,
-          reporteFinalDos.conclusiones,
-          reporteFinalDos.propuestas,
-          reporteFinalDos.idServicio,
-          String(reporteFinalDos.id),
-        ]);
-      } catch (err) {
-        throw (err);
-      }
+      const args = [
+        String(reporteFinalDos.id),
+        reporteFinalDos.idServicio,
+        reporteFinalDos.metaAlcanzada,
+        reporteFinalDos.metodologiaUtilizada,
+        reporteFinalDos.innovacionAportada,
+        reporteFinalDos.conclusiones,
+        reporteFinalDos.propuestas,
+        String(reporteFinalDos.id),
+      ];
+      const promesaReporteFinalDos: any = await new Promise((resolve, reject) => {
+        this.conection.query(query, args, (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.affectedRows < 1) {
+            reject(new ItemNotFound());
+          } else {
+            resolve(reporteFinalDos);
+          }
+        });
+      });
+
+      return promesaReporteFinalDos;
     }
 
-    async eliminarReporteFinalDos(id: number) {
-      const del = 'DELETE FROM reporte_final WHERE id=?';
-      try {
-        await this.conection.query(del, [String(id)]);
-      } catch (err) {
-        throw (err);
-      }
+    async eliminarReporteFinalDos(id: number): Promise<ReporteFinalDos> {
+      const query = 'DELETE FROM reporte_final WHERE id=?';
+      const promesaReporteParcial: any = await new Promise((resolve, reject) => {
+        this.conection.query(query, [String(id)], (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.affectedRows < 1) {
+            reject(new ItemNotFound());
+          } else {
+            resolve(true);
+          }
+        });
+      });
+
+      return promesaReporteParcial;
     }
 }

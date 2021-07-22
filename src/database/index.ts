@@ -1,6 +1,5 @@
 /* eslint-disable linebreak-style */
 import config = require('../../configuration.json');
-import DummyStore from './DummyStore';
 import AlmacenarUsuario from './AlmacenarUsuario';
 import AlmacenarTrimestre from './AlmacenarTrimestre';
 import AlmacenarReporteParcial from './AlmacenarReporteParcial';
@@ -8,8 +7,6 @@ import AlmacenarReporteFinalDos from './AlmacenarReporteFinalDos';
 
 class Database {
   // Esto esta así xq después vamos a añadir mas stores en este archivo
-  dummyStore: DummyStore;
-
   almacenarUsuario: AlmacenarUsuario;
 
   almacenarTrimestre: AlmacenarTrimestre;
@@ -26,7 +23,6 @@ class Database {
       database: config.database.name,
     };
 
-    this.dummyStore = new DummyStore(databaseConfig);
     this.almacenarUsuario = new AlmacenarUsuario(databaseConfig);
     this.almacenarTrimestre = new AlmacenarTrimestre(databaseConfig);
     this.almacenarReporteParcial = new AlmacenarReporteParcial(databaseConfig);

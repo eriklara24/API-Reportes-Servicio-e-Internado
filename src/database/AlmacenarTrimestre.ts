@@ -14,67 +14,85 @@ export default class AlmacenarTrimestre {
       });
     }
 
-    async crearTrimestre(trimestre: Trimestre) {
-      const insert = 'INSERT INTO trimestre(id, fecha_inicio, fecha_fin) VALUES (?, ?, ?)';
-      try {
-        await this.conection.query(insert, [
-          String(trimestre.id),
-          String(trimestre.fechaInicio),
-          String(trimestre.fechaFin),
-        ]);
-      } catch (err) {
-        throw (err);
-      }
-    }
-
-    async obtenerTrimestre(id: number): Promise<Trimestre> {
-      const select = 'SELECT * FROM trimestre WHERE id=?';
-      const dataTrimestre: any = await new Promise((resolve, reject) => {
-        this.conection.query(select, [String(id)], (err, res) => {
+    async crearTrimestre(trimestre: Trimestre): Promise<Trimestre> {
+      const query = 'INSERT INTO trimestre(id, fecha_inicio, fecha_fin) VALUES (?, ?, ?)';
+      const args = [
+        String(trimestre.id),
+        trimestre.fechaInicio,
+        trimestre.fechaFin,
+      ];
+      const promesaTrimestre: any = await new Promise((resolve, reject) => {
+        this.conection.query(query, args, (err) => {
           if (err) {
-            throw err;
+            reject(err);
+          } else {
+            resolve(trimestre);
           }
-          if (res.length < 1) {
-            reject(new ItemNotFound());
-          }
-          const trimestre = {
-            id: res[0].id,
-            fechaInicio: res[0].fecha_inicio,
-            fechaFin: res[0].fecha_fin,
-          };
-          resolve(trimestre);
         });
       });
 
-      const nuevoTrimestre = {
-        id: dataTrimestre.id,
-        fechaInicio: dataTrimestre.fechaInicio,
-        fechaFin: dataTrimestre.fechaFin,
-      };
-
-      return nuevoTrimestre;
+      return promesaTrimestre;
     }
 
-    async actualizarTrimestre(trimestre: Trimestre) {
-      const update = 'UPDATE trimestre SET id=?, fecha_inicio=?, fecha_fin=? WHERE id=?';
-      try {
-        await this.conection.query(update, [
-          String(trimestre.id),
-          trimestre.fechaInicio,
-          trimestre.fechaFin,
-          String(trimestre.id),
-        ]);
-      } catch (err) {
-        throw (err);
-      }
+    async obtenerTrimestre(id: number): Promise<Trimestre> {
+      const query = 'SELECT * FROM trimestre WHERE id=?';
+      const promesaTrimestre: any = await new Promise((resolve, reject) => {
+        this.conection.query(query, [String(id)], (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.length < 1) {
+            reject(new ItemNotFound());
+          } else {
+            const trimestre = {
+              id: res[0].id,
+              fechaInicio: res[0].fecha_inicio,
+              fechaFin: res[0].fecha_fin,
+            };
+            resolve(trimestre);
+          }
+        });
+      });
+
+      return promesaTrimestre;
     }
 
-    async eliminarTrimestre(id: number) {
-      const del = 'DELETE FROM trimestre WHERE id=?';
-      try {
-        await this.conection.query(del, [String(id)]);
-      } catch (err) {
-        throw (err);
-      }
+    async actualizarTrimestre(trimestre: Trimestre): Promise<Trimestre> {
+      const query = 'UPDATE trimestre SET id=?, fecha_inicio=?, fecha_fin=? WHERE id=?';
+      const args = [
+        String(trimestre.id),
+        trimestre.fechaInicio,
+        trimestre.fechaFin,
+        String(trimestre.id),
+      ];
+      const promesaTrimestre: any = await new Promise((resolve, reject) => {
+        this.conection.query(query, args, (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.affectedRows < 1) {
+            reject(new ItemNotFound());
+          } else {
+            resolve(trimestre);
+          }
+        });
+      });
+
+      return promesaTrimestre;
+    }
+
+    async eliminarTrimestre(id: number): Promise<Trimestre> {
+      const query = 'DELETE FROM trimestre WHERE id=?';
+      const promesaTrimestre: any = await new Promise((resolve, reject) => {
+        this.conection.query(query, [String(id)], (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.affectedRows < 1) {
+            reject(new ItemNotFound());
+          } else {
+            resolve(true);
+          }
+        });
+      });
+
+      return promesaTrimestre;
     }
 }
