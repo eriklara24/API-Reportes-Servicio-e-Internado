@@ -4,7 +4,7 @@ import mysql = require('mysql');
 import Trimestre from '../resources/interfaces/Trimestre';
 import ItemNotFound from './errors/ItemNotFound';
 
-export default class AlmacenarTrimestre {
+export default class AlmacenamientoTrimestre {
     private conection: mysql.Connection;
 
     constructor(databaseConfig: any) {
@@ -15,18 +15,20 @@ export default class AlmacenarTrimestre {
     }
 
     async crearTrimestre(trimestre: Trimestre): Promise<Trimestre> {
-      const query = 'INSERT INTO trimestre(id, fecha_inicio, fecha_fin) VALUES (?, ?, ?)';
+      const query = 'INSERT INTO trimestre(fecha_inicio, fecha_fin) VALUES (?, ?)';
       const args = [
-        String(trimestre.id),
         trimestre.fechaInicio,
         trimestre.fechaFin,
       ];
       const promesaTrimestre: any = await new Promise((resolve, reject) => {
-        this.conection.query(query, args, (err) => {
+        this.conection.query(query, args, (err, res) => {
+          console.log(res);
           if (err) {
             reject(err);
           } else {
-            resolve(trimestre);
+            const nuevoTrimestre = trimestre;
+            nuevoTrimestre.id = res.insertId;
+            resolve(nuevoTrimestre);
           }
         });
       });
@@ -57,9 +59,8 @@ export default class AlmacenarTrimestre {
     }
 
     async actualizarTrimestre(trimestre: Trimestre): Promise<Trimestre> {
-      const query = 'UPDATE trimestre SET id=?, fecha_inicio=?, fecha_fin=? WHERE id=?';
+      const query = 'UPDATE trimestre SET fecha_inicio=?, fecha_fin=? WHERE id=?';
       const args = [
-        String(trimestre.id),
         trimestre.fechaInicio,
         trimestre.fechaFin,
         String(trimestre.id),

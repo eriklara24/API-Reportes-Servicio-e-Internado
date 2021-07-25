@@ -4,7 +4,7 @@ import mysql = require('mysql');
 import Usuario from '../resources/entities/Usuario';
 import ItemNotFound from './errors/ItemNotFound';
 
-export default class AlmacenarUsuario {
+export default class AlmacenamientoUsuario {
     private conection: mysql.Connection;
 
     constructor(databaseConfig: any) {

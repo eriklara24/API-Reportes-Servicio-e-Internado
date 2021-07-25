@@ -4,7 +4,7 @@ import mysql = require('mysql');
 import ReporteParcial from '../resources/interfaces/ReporteParcial';
 import ItemNotFound from './errors/ItemNotFound';
 
-export default class AlmacenarReporteParcial {
+export default class AlmacenamientoReporteParcial {
     private conection: mysql.Connection;
 
     constructor(databaseConfig: any) {
@@ -15,19 +15,20 @@ export default class AlmacenarReporteParcial {
     }
 
     async crearReporteParcial(reporteParcial: ReporteParcial): Promise<ReporteParcial> {
-      const query = 'INSERT INTO reporte_parcial(id, servicio_id, trimestre_id, actualizado) VALUES (?, ?, ?, ?)';
+      const query = 'INSERT INTO reporte_parcial(servicio_id, trimestre_id, actualizado) VALUES (?, ?, ?)';
       const args = [
-        String(reporteParcial.id),
         reporteParcial.idServicio,
         reporteParcial.idTrimestre,
         reporteParcial.actualizado,
       ];
       const promesaReporteParcial: any = await new Promise((resolve, reject) => {
-        this.conection.query(query, args, (err) => {
+        this.conection.query(query, args, (err, res) => {
           if (err) {
             reject(err);
           } else {
-            resolve(reporteParcial);
+            const nuevoReporteParcial = reporteParcial;
+            nuevoReporteParcial.id = res.insertId;
+            resolve(nuevoReporteParcial);
           }
         });
       });
@@ -59,9 +60,8 @@ export default class AlmacenarReporteParcial {
     }
 
     async actualizarReporteParcial(reporteParcial: ReporteParcial): Promise<ReporteParcial> {
-      const query = 'UPDATE reporte_parcial SET id=?, servicio_id=?, trimestre_id=?, actualizado=? WHERE id=?';
+      const query = 'UPDATE reporte_parcial SET servicio_id=?, trimestre_id=?, actualizado=? WHERE id=?';
       const args = [
-        String(reporteParcial.id),
         reporteParcial.idServicio,
         reporteParcial.idTrimestre,
         reporteParcial.actualizado,

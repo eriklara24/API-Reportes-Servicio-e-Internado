@@ -4,7 +4,7 @@ import mysql = require('mysql');
 import ReporteFinalDos from '../resources/interfaces/ReporteFinalDos';
 import ItemNotFound from './errors/ItemNotFound';
 
-export default class AlmacenarReporteFinalDos {
+export default class AlmacenamientoReporteFinalDos {
     private conection: mysql.Connection;
 
     constructor(databaseConfig: any) {
@@ -16,10 +16,9 @@ export default class AlmacenarReporteFinalDos {
 
     async crearReporteFinalDos(reporteFinalDos: ReporteFinalDos): Promise<ReporteFinalDos> {
       const query = 'INSERT INTO reporte_final'
-          + ' (id, servicio_id, meta_alcanzada, metodologia, innovacion, conclusion, propuestas)'
-          + ' VALUES (?, ?, ?, ?, ?, ?, ?)';
+          + ' (servicio_id, meta_alcanzada, metodologia, innovacion, conclusion, propuestas)'
+          + ' VALUES (?, ?, ?, ?, ?, ?)';
       const args = [
-        String(reporteFinalDos.id),
         reporteFinalDos.idServicio,
         reporteFinalDos.metaAlcanzada,
         reporteFinalDos.metodologiaUtilizada,
@@ -28,11 +27,13 @@ export default class AlmacenarReporteFinalDos {
         reporteFinalDos.propuestas,
       ];
       const promesaReporteFinalDos: any = await new Promise((resolve, reject) => {
-        this.conection.query(query, args, (err) => {
+        this.conection.query(query, args, (err, res) => {
           if (err) {
             reject(err);
           } else {
-            resolve(reporteFinalDos);
+            const nuevoReporteFinalDos = reporteFinalDos;
+            nuevoReporteFinalDos.id = res.insertId;
+            resolve(nuevoReporteFinalDos);
           }
         });
       });
@@ -68,10 +69,9 @@ export default class AlmacenarReporteFinalDos {
 
     async actualizarReporteFinalDos(reporteFinalDos: ReporteFinalDos): Promise<ReporteFinalDos> {
       const query = 'UPDATE reporte_final'
-        + ' SET id=?, servicio_id=?, meta_alcanzada=?, metodologia=?, innovacion=?, conclusion=?, propuestas=?'
+        + ' SET servicio_id=?, meta_alcanzada=?, metodologia=?, innovacion=?, conclusion=?, propuestas=?'
         + ' WHERE id=?';
       const args = [
-        String(reporteFinalDos.id),
         reporteFinalDos.idServicio,
         reporteFinalDos.metaAlcanzada,
         reporteFinalDos.metodologiaUtilizada,

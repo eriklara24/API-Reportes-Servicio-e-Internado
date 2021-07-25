@@ -3,7 +3,7 @@ import database from '../../database';
 
 export default async function obtenerPorID(req: any, res: any) {
   const { usuarioID } = req.params;
-  database.almacenarUsuario.eliminarUsuario(usuarioID);
+  database.almacenamientoUsuario.eliminarUsuario(usuarioID);
 
   return res.status(201).send({ code: 'Usuario eliminado con éxito' });
 }

@@ -1,19 +1,19 @@
 /* eslint-disable linebreak-style */
 import config = require('../../configuration.json');
-import AlmacenarUsuario from './AlmacenarUsuario';
-import AlmacenarTrimestre from './AlmacenarTrimestre';
-import AlmacenarReporteParcial from './AlmacenarReporteParcial';
-import AlmacenarReporteFinalDos from './AlmacenarReporteFinalDos';
+import AlmacenamientoUsuario from './AlmacenamientoUsuario';
+import AlmacenamientoTrimestre from './AlmacenamientoTrimestre';
+import AlmacenamientoReporteParcial from './AlmacenamientoReporteParcial';
+import AlmacenamientoReporteFinalDos from './AlmacenamientoReporteFinalDos';
 
 class Database {
   // Esto esta así xq después vamos a añadir mas stores en este archivo
-  almacenarUsuario: AlmacenarUsuario;
+  almacenamientoUsuario: AlmacenamientoUsuario;
 
-  almacenarTrimestre: AlmacenarTrimestre;
+  almacenamientoTrimestre: AlmacenamientoTrimestre;
 
-  almacenarReporteParcial: AlmacenarReporteParcial;
+  almacenamientoReporteParcial: AlmacenamientoReporteParcial;
 
-  almacenarReporteFinalDos: AlmacenarReporteFinalDos;
+  almacenamientoReporteFinalDos: AlmacenamientoReporteFinalDos;
 
   constructor() {
     const databaseConfig = {
@@ -23,10 +23,10 @@ class Database {
       database: config.database.name,
     };
 
-    this.almacenarUsuario = new AlmacenarUsuario(databaseConfig);
-    this.almacenarTrimestre = new AlmacenarTrimestre(databaseConfig);
-    this.almacenarReporteParcial = new AlmacenarReporteParcial(databaseConfig);
-    this.almacenarReporteFinalDos = new AlmacenarReporteFinalDos(databaseConfig);
+    this.almacenamientoUsuario = new AlmacenamientoUsuario(databaseConfig);
+    this.almacenamientoTrimestre = new AlmacenamientoTrimestre(databaseConfig);
+    this.almacenamientoReporteParcial = new AlmacenamientoReporteParcial(databaseConfig);
+    this.almacenamientoReporteFinalDos = new AlmacenamientoReporteFinalDos(databaseConfig);
   }
 }
 
