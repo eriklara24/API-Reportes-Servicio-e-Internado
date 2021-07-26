@@ -73,7 +73,7 @@ export default class AlmacenamientoUsuario {
       return promesaUsuario;
     }
 
-    async eliminarUsuario(id: number): Promise<Usuario> {
+    async eliminarUsuario(id: number): Promise<boolean> {
       const query = 'DELETE FROM usuario WHERE id=?';
       const promesaUsuario: any = await new Promise((resolve, reject) => {
         this.conection.query(query, [String(id)], (err, res) => {

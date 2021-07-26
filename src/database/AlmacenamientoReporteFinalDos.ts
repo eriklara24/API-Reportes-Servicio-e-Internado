@@ -95,7 +95,7 @@ export default class AlmacenamientoReporteFinalDos {
       return promesaReporteFinalDos;
     }
 
-    async eliminarReporteFinalDos(id: number): Promise<ReporteFinalDos> {
+    async eliminarReporteFinalDos(id: number): Promise<boolean> {
       const query = 'DELETE FROM reporte_final WHERE id=?';
       const promesaReporteParcial: any = await new Promise((resolve, reject) => {
         this.conection.query(query, [String(id)], (err, res) => {

@@ -82,7 +82,7 @@ export default class AlmacenamientoReporteParcial {
       return promesaReporteParcial;
     }
 
-    async eliminarReporteParcial(id: number): Promise<ReporteParcial> {
+    async eliminarReporteParcial(id: number): Promise<boolean> {
       const query = 'DELETE FROM reporte_parcial WHERE id=?';
       const promesaReporteParcial: any = await new Promise((resolve, reject) => {
         this.conection.query(query, [String(id)], (err, res) => {

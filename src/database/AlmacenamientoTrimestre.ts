@@ -22,7 +22,6 @@ export default class AlmacenamientoTrimestre {
       ];
       const promesaTrimestre: any = await new Promise((resolve, reject) => {
         this.conection.query(query, args, (err, res) => {
-          console.log(res);
           if (err) {
             reject(err);
           } else {
@@ -80,7 +79,7 @@ export default class AlmacenamientoTrimestre {
       return promesaTrimestre;
     }
 
-    async eliminarTrimestre(id: number): Promise<Trimestre> {
+    async eliminarTrimestre(id: number): Promise<boolean> {
       const query = 'DELETE FROM trimestre WHERE id=?';
       const promesaTrimestre: any = await new Promise((resolve, reject) => {
         this.conection.query(query, [String(id)], (err, res) => {
