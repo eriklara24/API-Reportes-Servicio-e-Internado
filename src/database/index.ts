@@ -4,16 +4,20 @@ import AlmacenamientoUsuario from './AlmacenamientoUsuario';
 import AlmacenamientoTrimestre from './AlmacenamientoTrimestre';
 import AlmacenamientoReporteParcial from './AlmacenamientoReporteParcial';
 import AlmacenamientoReporteFinalDos from './AlmacenamientoReporteFinalDos';
+import AlmacenamientoActividadDeUsuario from './AlmacenamientoActividadDeUsuario';
+import AlmacenamientoActividadRealizada from './AlmacenamientoActividadRealizada';
+import AlmacenamientoAtencionRealizada from './AlmacenamientoAtencionRealizada';
+import AlmacenamientoServicioGeneral from './AlmacenamientoServicioGeneral';
 
 class Database {
-  // Esto esta así xq después vamos a añadir mas stores en este archivo
   almacenamientoUsuario: AlmacenamientoUsuario;
-
   almacenamientoTrimestre: AlmacenamientoTrimestre;
-
   almacenamientoReporteParcial: AlmacenamientoReporteParcial;
-
   almacenamientoReporteFinalDos: AlmacenamientoReporteFinalDos;
+  almacenamientoActividadDeUsuario: AlmacenamientoActividadDeUsuario;
+  almacenamientoActividadRealizada: AlmacenamientoActividadRealizada;
+  almacenamientoAtencionRealizada: AlmacenamientoAtencionRealizada;
+  almacenamientoServicioGeneral: AlmacenamientoServicioGeneral;
 
   constructor() {
     const databaseConfig = {
@@ -27,6 +31,10 @@ class Database {
     this.almacenamientoTrimestre = new AlmacenamientoTrimestre(databaseConfig);
     this.almacenamientoReporteParcial = new AlmacenamientoReporteParcial(databaseConfig);
     this.almacenamientoReporteFinalDos = new AlmacenamientoReporteFinalDos(databaseConfig);
+    this.almacenamientoActividadDeUsuario = new AlmacenamientoActividadDeUsuario(databaseConfig);
+    this.almacenamientoActividadRealizada = new AlmacenamientoActividadRealizada(databaseConfig);
+    this.almacenamientoAtencionRealizada = new AlmacenamientoAtencionRealizada(databaseConfig);
+    this.almacenamientoServicioGeneral = new AlmacenamientoServicioGeneral(databaseConfig);
   }
 }
 
