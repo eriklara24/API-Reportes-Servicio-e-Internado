@@ -97,6 +97,37 @@ export default class AlmacenamientoServicioGeneral {
       return selectInfo;
     }
 
+    /** Método para obtener los datos generales de un servicio a partir de un ID de usuario */
+    public async obtenerPorIdUsuario(idUsuario: number): Promise<ServicioEInternado> {
+      const select = 'SELECT * FROM `servicio` WHERE usuario_id = ?';
+      const promise: any = await new Promise((resolve, reject) => {
+        this.conexion.query(select, [idUsuario], (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.length < 1) {
+            reject(new ItemNotFound());
+          } else {
+            const datos = {
+              id: res[0].id,
+              idUsuario: res[0].usuario_id,
+              entidadReceptora: res[0].entidad_receptora,
+              receptor: res[0].receptor,
+              programa: res[0].programa,
+              objetivosDelPrograma: res[0].objetivos_programa,
+              fechaInicio: res[0].fecha_inicio,
+              fechaFin: res[0].fecha_fin,
+              totalDeHoras: res[0].total_horas,
+              horarioHoraInicio: res[0].horario_hora_inicio,
+              horarioHoraFin: res[0].horario_hora_fin,
+            };
+            resolve(datos);
+          }
+        });
+      });
+
+      return promise;
+    }
+
     /** Actualizar todos los valores de un campo de la tabla servicio de MySQL */
     public async actualizarServicioGeneral(servicio: ServicioEInternado): Promise<ServicioEInternado> {
       const update = 'UPDATE servicio SET usuario_id=?, entidad_receptora=?, receptor=?, programa=?,'

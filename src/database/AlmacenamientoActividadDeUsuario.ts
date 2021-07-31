@@ -70,6 +70,58 @@ export default class AlmacenamientoActividadDeUsuario {
       return selectInfo;
     }
 
+    /** Método para obtener las actividades de un usuario */
+    public async obtenerPorIdUsuario(idUsuario: number): Promise<ActividadesDeUsuario[]> {
+      const select = 'SELECT actividad_de_usuario.* FROM servicio JOIN actividad_de_usuario '
+      + 'ON actividad_de_usuario.servicio_id = servicio.id '
+      + 'WHERE servicio.usuario_id = ?';
+      const datos: ActividadesDeUsuario[] = [];
+      const promise: any = await new Promise((resolve, reject) => {
+        this.conexion.query(select, [idUsuario], (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.length < 1) {
+            resolve(datos);
+          } else {
+            for (let i = 0; i < res.length; i += 1) {
+              const aux = {
+                id: res[i].id,
+                idServicio: res[i].servicio_id,
+                descripcion: res[i].descripcion,
+              };
+              datos.push(aux);
+            }
+            resolve(datos);
+          }
+        });
+      });
+
+      return promise;
+    }
+
+    /** Método para obtener una actividad de usuario por el texto de la descripción */
+    public async obtenerPorDescripcion(descripcion: string): Promise<ActividadesDeUsuario> {
+      const select = 'SELECT * FROM `actividad_de_usuario` WHERE descripcion = ?';
+      const promise: any = await new Promise((resolve, reject) => {
+        this.conexion.query(select, [descripcion], (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.length < 1) {
+            resolve(new ItemNotFound());
+          } else {
+            const datosActividad = {
+              id: res[0].id,
+              idServicio: res[0].servicio_id,
+              descripcion: res[0].descripcion,
+            };
+            resolve(datosActividad);
+          }
+        });
+      });
+
+      return promise;
+    }
+
     /** Actualizar todos los valores de un campo de la tabla actividad_de_usuario de MySQL */
     // eslint-disable-next-line max-len
     public async actualizarActividadDeUsuario(actividad: ActividadesDeUsuario): Promise<ActividadesDeUsuario> {
