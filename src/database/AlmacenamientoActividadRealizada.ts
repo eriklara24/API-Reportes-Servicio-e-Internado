@@ -117,4 +117,35 @@ export default class AlmacenamientoActividadRealizada {
 
       return deleteInfo;
     }
+
+    public async obtenerPorIDReporte(idReporte: number): Promise<ActividadesRealizadas[]> {
+      const actividadesRealizadas: ActividadesRealizadas[] = [];
+      const select = 'SELECT * FROM actividad_realizada WHERE idActividad=?';
+      const args = [idReporte];
+      const selectInfo: any = await new Promise((resolve, reject) => {
+        this.conexion.query(select, args, (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.length < 1) {
+            reject(new ItemNotFound());
+          } else {
+            res.array.forEach((actividad) => {
+              const datosActividad = {
+                id: actividad.id,
+                idActividad: actividad.asctividad_de_usuario_id,
+                idTrimestre: actividad.trimestre_id,
+                cantidad: actividad.cantidad,
+              };
+
+              if (datosActividad) {
+                actividadesRealizadas.push(datosActividad);
+              }
+            });
+            resolve(actividadesRealizadas);
+          }
+        });
+      });
+
+      return selectInfo;
+    }
 }

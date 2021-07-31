@@ -2,6 +2,8 @@
  * Escrito por Ramón Paredes Sánchez.
  */
 
+import ReporteParcial from './ReporteParcial';
+
 interface ServicioEInternado {
   id: number;
   idUsuario: number;
@@ -14,6 +16,7 @@ interface ServicioEInternado {
   totalDeHoras: number;
   horarioHoraInicio: string;
   horarioHoraFin: string;
+  ReporteParciales: ReporteParcial[]
 }
 
 export default ServicioEInternado;

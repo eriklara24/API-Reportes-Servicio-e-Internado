@@ -1,5 +1,6 @@
 /* eslint-disable linebreak-style */
 type roles = 'prestador' | 'interno' | 'revisor' | 'administrador';
+
 export default class Usuario {
     id: number;
 
@@ -24,5 +25,12 @@ export default class Usuario {
 
     getRol(): roles {
       return this.rol;
+    }
+
+    serialize():any {
+      return {
+        id: this.id,
+        rol: this.rol,
+      };
     }
 }

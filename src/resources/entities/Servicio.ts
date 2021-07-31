@@ -7,6 +7,11 @@
  * Escrito por Ramón Paredes Sánchez.
  */
 
+/** Atenciones Realizadas. Similar a Actividades Realizadas, pero aquí las atenciones están
+ * predifinidas y en lugar de tener una descripción, tienen un tipo
+ */
+import AtencionesRealizadas from '../interfaces/AtencionesRealizadas';
+
 /** Reportes Parciales. Una interfaz con la información de un reporte parcial */
 interface ReportesParciales {
   id: number;
@@ -41,17 +46,6 @@ interface ActividadesRealizadas {
   id: number;
   idActividad: number;
   idTrimestre: number;
-  cantidad: number;
-}
-
-/** Atenciones Realizadas. Similar a Actividades Realizadas, pero aquí las atenciones están
- * predifinidas y en lugar de tener una descripción, tienen un tipo
- */
-interface AtencionesRealizadas {
-  id: number;
-  idTrimestre: number;
-  idUsuario: number;
-  tipo: number;
   cantidad: number;
 }
 
@@ -91,12 +85,24 @@ export default class Servicio {
 
   private atencionesRealizadas: AtencionesRealizadas[];
 
-  constructor(id: number, idUsuario: number, entidadReceptora: string, receptor: string,
-    programa: string, objetivosDelPrograma: string, fechaInicio: string, fechaFin: string,
-    totalDeHoras: number, horarioHoraInicio: string, horarioHoraFin: string,
-    parciales: ReportesParciales[], final: ReporteFinalDos,
-    actividades: ActividadesDeUsuario[], realizadas: ActividadesRealizadas[],
-    atenciones: AtencionesRealizadas[]) {
+  constructor(
+    id: number,
+    idUsuario: number,
+    entidadReceptora: string,
+    receptor: string,
+    programa: string,
+    objetivosDelPrograma: string,
+    fechaInicio: string,
+    fechaFin: string,
+    totalDeHoras: number,
+    horarioHoraInicio: string,
+    horarioHoraFin: string,
+    parciales: ReportesParciales[],
+    final: ReporteFinalDos,
+    actividades: ActividadesDeUsuario[],
+    realizadas: ActividadesRealizadas[],
+    atenciones: AtencionesRealizadas[],
+  ) {
     this.id = id;
     this.idUsuario = idUsuario;
     this.entidadReceptora = entidadReceptora;

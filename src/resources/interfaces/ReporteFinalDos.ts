@@ -1,4 +1,8 @@
 /* eslint-disable linebreak-style */
+
+import ActividadesRealizadas from './ActividadesRealizadas';
+import AtencionesRealizadas from './AtencionesRealizadas';
+
 /* eslint-disable semi */
 export default interface ReporteFinalDos {
     id?: number;
@@ -8,4 +12,6 @@ export default interface ReporteFinalDos {
     innovacionAportada: string;
     conclusiones: string;
     propuestas: string;
+    actividadesRealizdas: ActividadesRealizadas[]
+    atencionesRealizadas: AtencionesRealizadas[]
 }
