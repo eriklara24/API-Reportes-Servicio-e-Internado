@@ -5,7 +5,7 @@
 import ReporteParcial from './ReporteParcial';
 
 interface ServicioEInternado {
-  id: number;
+  id?: number;
   idUsuario: number;
   entidadReceptora: string;
   receptor: string;
