@@ -3,7 +3,7 @@
  */
 
 interface AtencionesRealizadas {
-    id: number;
+    id?: number;
     idTrimestre: number;
     idUsuario: number;
     tipo: number;
