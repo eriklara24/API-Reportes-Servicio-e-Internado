@@ -27,7 +27,7 @@ export default class AlmacenamientoAtencionRealizada {
       + 'VALUES(?, ?, ?, ?)';
       const args = [
         atencion.idUsuario,
-        atencion.idTrimestre,
+        atencion.idReporteParcial,
         atencion.tipo,
         atencion.cantidad,
       ];
@@ -38,7 +38,7 @@ export default class AlmacenamientoAtencionRealizada {
           } else {
             const atencionRegistrada = {
               id: res.insertId,
-              idTrimestre: atencion.idTrimestre,
+              idTrimestre: atencion.idReporteParcial,
               idUsuario: atencion.idUsuario,
               tipo: atencion.tipo,
               cantidad: atencion.cantidad,
@@ -83,7 +83,7 @@ export default class AlmacenamientoAtencionRealizada {
       + 'WHERE id=?';
       const args = [
         atencion.idUsuario,
-        atencion.idTrimestre,
+        atencion.idReporteParcial,
         atencion.tipo,
         atencion.cantidad,
         atencion.id,

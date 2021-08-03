@@ -27,7 +27,7 @@ export default class AlmacenamientoActividadRealizada {
       + 'VALUES (?, ?, ?)';
       const args = [
         actividad.idActividad,
-        actividad.idTrimestre,
+        actividad.idReporteParcial,
         actividad.cantidad,
       ];
       const insertInfo: any = await new Promise((resolve, reject) => {
@@ -38,7 +38,7 @@ export default class AlmacenamientoActividadRealizada {
             const actividadRegistrada = {
               id: res.insertId,
               idActividad: actividad.idActividad,
-              idTrimestre: actividad.idTrimestre,
+              idTrimestre: actividad.idReporteParcial,
               cantidad: actividad.cantidad,
             };
             resolve(actividadRegistrada);
@@ -80,7 +80,7 @@ export default class AlmacenamientoActividadRealizada {
       + 'WHERE id=?';
       const args = [
         actividad.idActividad,
-        actividad.idTrimestre,
+        actividad.idReporteParcial,
         actividad.cantidad,
         actividad.id,
       ];

@@ -40,7 +40,7 @@ interface ActividadesDeUsuario {
 interface ActividadesRealizadas {
   id: number;
   idActividad: number;
-  idTrimestre: number;
+  idReporteParcial: number;
   cantidad: number;
 }
 
@@ -49,7 +49,7 @@ interface ActividadesRealizadas {
  */
 interface AtencionesRealizadas {
   id: number;
-  idTrimestre: number;
+  idReporteParcial: number;
   idUsuario: number;
   tipo: number;
   cantidad: number;
