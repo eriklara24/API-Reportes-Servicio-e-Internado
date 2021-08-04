@@ -9,6 +9,6 @@ export default interface ReporteParcial {
     idServicio: number;
     idTrimestre: number;
     actualizado: string;
-    actividadesRealizdas: ActividadesRealizadas[]
-    atencionesRealizadas: AtencionesRealizadas[]
+    actividadesRealizadas: ActividadesRealizadas[];
+    atencionesRealizadas: AtencionesRealizadas[];
 }

@@ -7,47 +7,11 @@
  * Escrito por Ramón Paredes Sánchez.
  */
 
-/** Atenciones Realizadas. Similar a Actividades Realizadas, pero aquí las atenciones están
- * predifinidas y en lugar de tener una descripción, tienen un tipo
+/** Import's de todas las interfaces necesarias para la construcción de la entidad.
  */
-import AtencionesRealizadas from '../interfaces/AtencionesRealizadas';
-
-/** Reportes Parciales. Una interfaz con la información de un reporte parcial */
-interface ReportesParciales {
-  id: number;
-  idServicio: number;
-  idTrimestre: number;
-  actualizado: string;
-}
-
-/** Reporte Final Dos. Incluye la información de un reporte final */
-interface ReporteFinalDos {
-  id: number;
-  idServicio: number;
-  metaAlcanzada: string;
-  metodologiaUtilizada: string;
-  innovacionAportada: string;
-  conclusiones: string;
-  propuestas: string;
-}
-
-/** Actividades de Usuario. Incluyen la información de una activdad y su relación
- *  con un servicio */
-interface ActividadesDeUsuario {
-  id: number;
-  idServicio: number;
-  descripcion: string;
-}
-
-/** Actividades Realizadas. Relaciona las actividades de un usuario con su trimestre
- * y su cantidad realizada en ese trimestre
- */
-interface ActividadesRealizadas {
-  id: number;
-  idActividad: number;
-  idTrimestre: number;
-  cantidad: number;
-}
+import ReporteParcial from '../interfaces/ReporteParcial';
+import ReporteFinalDos from '../interfaces/ReporteFinalDos';
+import ActividadesDeUsuario from '../interfaces/ActividadesDeUsuario';
 
 /** Entidad de Servicio. Contiene toda la información e interfaces que conforman
  * un servicio social o internado.
@@ -75,15 +39,11 @@ export default class Servicio {
 
   private horarioHoraFin: string;
 
-  private reportesParciales: ReportesParciales[];
+  private reportesParciales: ReporteParcial[];
 
   private reporteFinalDos: ReporteFinalDos;
 
   private actividadesDeUsuario: ActividadesDeUsuario[];
-
-  private actividadesRealizadas: ActividadesRealizadas[];
-
-  private atencionesRealizadas: AtencionesRealizadas[];
 
   constructor(
     id: number,
@@ -97,11 +57,9 @@ export default class Servicio {
     totalDeHoras: number,
     horarioHoraInicio: string,
     horarioHoraFin: string,
-    parciales: ReportesParciales[],
+    parciales: ReporteParcial[],
     final: ReporteFinalDos,
     actividades: ActividadesDeUsuario[],
-    realizadas: ActividadesRealizadas[],
-    atenciones: AtencionesRealizadas[],
   ) {
     this.id = id;
     this.idUsuario = idUsuario;
@@ -117,8 +75,6 @@ export default class Servicio {
     this.reportesParciales = parciales;
     this.reporteFinalDos = final;
     this.actividadesDeUsuario = actividades;
-    this.actividadesRealizadas = realizadas;
-    this.atencionesRealizadas = atenciones;
   }
 
   // sets y gets de todas las interfaces y propiedades de la clase
@@ -211,11 +167,11 @@ export default class Servicio {
     return this.horarioHoraFin;
   }
 
-  public setReportesParciales(parciales: ReportesParciales[]): void {
+  public setReportesParciales(parciales: ReporteParcial[]): void {
     this.reportesParciales = parciales;
   }
 
-  public getReportesParciales(): ReportesParciales[] {
+  public getReportesParciales(): ReporteParcial[] {
     return this.reportesParciales;
   }
 
@@ -233,21 +189,5 @@ export default class Servicio {
 
   public getActividadesDeUsuario(): ActividadesDeUsuario[] {
     return this.actividadesDeUsuario;
-  }
-
-  public setActividadesRealizadas(realizadas: ActividadesRealizadas[]):void {
-    this.actividadesRealizadas = realizadas;
-  }
-
-  public getActividadesRealizadas(): ActividadesRealizadas[] {
-    return this.actividadesRealizadas;
-  }
-
-  public setAtencionesRealizadas(atenciones: AtencionesRealizadas[]):void {
-    this.atencionesRealizadas = atenciones;
-  }
-
-  public getAtencionesRealizadas(): AtencionesRealizadas[] {
-    return this.atencionesRealizadas;
   }
 }
