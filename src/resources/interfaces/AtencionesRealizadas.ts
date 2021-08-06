@@ -4,7 +4,7 @@
 
 interface AtencionesRealizadas {
     id: number;
-    idTrimestre: number;
+    idReporteParcial: number;
     idUsuario: number;
     tipo: number;
     cantidad: number;

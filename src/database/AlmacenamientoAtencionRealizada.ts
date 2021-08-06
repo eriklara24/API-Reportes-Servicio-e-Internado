@@ -23,11 +23,11 @@ export default class AlmacenamientoAtencionRealizada {
 
     /** Insertar valores en la tabla atencion_realizada de MySQL */
     public async crearAtencionRealizada(atencion: AtencionesRealizadas): Promise<AtencionesRealizadas> {
-      const insert = 'INSERT INTO atencion_realizada(usuario_id, trimestre_id, tipo, cantidad) '
+      const insert = 'INSERT INTO atencion_realizada(usuario_id, reporte_parcial_id, tipo, cantidad) '
       + 'VALUES(?, ?, ?, ?)';
       const args = [
         atencion.idUsuario,
-        atencion.idTrimestre,
+        atencion.idReporteParcial,
         atencion.tipo,
         atencion.cantidad,
       ];
@@ -38,7 +38,7 @@ export default class AlmacenamientoAtencionRealizada {
           } else {
             const atencionRegistrada = {
               id: res.insertId,
-              idTrimestre: atencion.idTrimestre,
+              idReporteParcial: atencion.idReporteParcial,
               idUsuario: atencion.idUsuario,
               tipo: atencion.tipo,
               cantidad: atencion.cantidad,
@@ -64,7 +64,7 @@ export default class AlmacenamientoAtencionRealizada {
           } else {
             const datosAtencion = {
               id: res[0].id,
-              idTrimestre: res[0].trimestre_id,
+              idReporteParcial: res[0].reporte_parcial_id,
               idUsuario: res[0].usuario_id,
               tipo: res[0].tipo,
               cantidad: res[0].cantidad,
@@ -79,11 +79,11 @@ export default class AlmacenamientoAtencionRealizada {
 
     /** Actualizar todos los valores de un campo de la tabla atencion_realizada de MySQL */
     public async actualizarAtencionRealizada(atencion: AtencionesRealizadas): Promise<AtencionesRealizadas> {
-      const update = 'UPDATE atencion_realizada SET usuario_id=?, trimestre_id=?, tipo=?, cantidad=? '
+      const update = 'UPDATE atencion_realizada SET usuario_id=?, reporte_parcial_id=?, tipo=?, cantidad=? '
       + 'WHERE id=?';
       const args = [
         atencion.idUsuario,
-        atencion.idTrimestre,
+        atencion.idReporteParcial,
         atencion.tipo,
         atencion.cantidad,
         atencion.id,

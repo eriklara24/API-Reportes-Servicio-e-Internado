@@ -5,7 +5,7 @@
 interface ActividadesRealizadas {
     id: number;
     idActividad: number;
-    idTrimestre: number;
+    idReporteParcial: number;
     cantidad: number;
 }
 

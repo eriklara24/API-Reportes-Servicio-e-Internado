@@ -23,11 +23,11 @@ export default class AlmacenamientoActividadRealizada {
 
     /** Insertar valores en la tabla actividad_realizada de MySQL */
     public async crearActividadRealizada(actividad: ActividadesRealizadas): Promise<ActividadesRealizadas> {
-      const insert = 'INSERT INTO actividad_realizada(actividad_de_usuario_id, trimestre_id, cantidad)'
+      const insert = 'INSERT INTO actividad_realizada(actividad_de_usuario_id, reporte_parcial_id, cantidad)'
       + 'VALUES (?, ?, ?)';
       const args = [
         actividad.idActividad,
-        actividad.idTrimestre,
+        actividad.idReporteParcial,
         actividad.cantidad,
       ];
       const insertInfo: any = await new Promise((resolve, reject) => {
@@ -38,7 +38,7 @@ export default class AlmacenamientoActividadRealizada {
             const actividadRegistrada = {
               id: res.insertId,
               idActividad: actividad.idActividad,
-              idTrimestre: actividad.idTrimestre,
+              idReporteParcial: actividad.idReporteParcial,
               cantidad: actividad.cantidad,
             };
             resolve(actividadRegistrada);
@@ -63,7 +63,7 @@ export default class AlmacenamientoActividadRealizada {
             const datosActividad = {
               id: res[0].id,
               idActividad: res[0].actividad_de_usuario_id,
-              idTrimestre: res[0].trimestre_id,
+              idReporteParcial: res[0].reporte_parcial_id,
               cantidad: res[0].cantidad,
             };
             resolve(datosActividad);
@@ -76,11 +76,11 @@ export default class AlmacenamientoActividadRealizada {
 
     /** Actualizar todos los valores de un campo de la tabla actividad_realizada de MySQL */
     public async actualizarActividadRealizada(actividad: ActividadesRealizadas): Promise<ActividadesRealizadas> {
-      const update = 'UPDATE actividad_realizada SET actividad_de_usuario_id=?, trimestre_id=?, cantidad=? '
+      const update = 'UPDATE actividad_realizada SET actividad_de_usuario_id=?, reporte_parcial_id=?, cantidad=? '
       + 'WHERE id=?';
       const args = [
         actividad.idActividad,
-        actividad.idTrimestre,
+        actividad.idReporteParcial,
         actividad.cantidad,
         actividad.id,
       ];
@@ -132,11 +132,10 @@ export default class AlmacenamientoActividadRealizada {
             res.array.forEach((actividad) => {
               const datosActividad = {
                 id: actividad.id,
-                idActividad: actividad.asctividad_de_usuario_id,
-                idTrimestre: actividad.trimestre_id,
+                idActividad: actividad.actividad_de_usuario_id,
+                idReporteParcial: actividad.reporte_parcial_id,
                 cantidad: actividad.cantidad,
               };
-
               if (datosActividad) {
                 actividadesRealizadas.push(datosActividad);
               }

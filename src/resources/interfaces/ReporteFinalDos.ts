@@ -12,6 +12,6 @@ export default interface ReporteFinalDos {
     innovacionAportada: string;
     conclusiones: string;
     propuestas: string;
-    actividadesRealizdas: ActividadesRealizadas[]
-    atencionesRealizadas: AtencionesRealizadas[]
+    actividadesRealizadas: ActividadesRealizadas[];
+    atencionesRealizadas: AtencionesRealizadas[];
 }
