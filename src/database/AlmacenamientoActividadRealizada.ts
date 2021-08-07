@@ -149,17 +149,9 @@ export default class AlmacenamientoActividadRealizada {
       return selectInfo;
     }
 
-    async obtenerPorIdUsuarioIdTrimestre(idUsuario: number, idTrimestre: number) {
-      const query = 'SELECT ar.id, ar.trimestre_id, ar.cantidad, ar.actividad_de_usuario_id'
-        + ' FROM actividad_realizada AS ar'
-        + ' JOIN actividad_de_usuario AS au'
-        + ' JOIN servicio AS s'
-        + ' ON (ar.actividad_de_usuario_id = au.id AND au.servicio_id = s.id)'
-        + ' WHERE (s.usuario_id = ? AND ar.trimestre_id = ?)';
-      const args = [
-        idUsuario,
-        idTrimestre,
-      ];
+    async obtenerPorIdReporteParcial(idReporteParcial: number) {
+      const query = 'SELECT * FROM actividad_realizada WHERE reporte_parcial_id = ?';
+      const args = [idReporteParcial];
       const promesaActividadRealizada: any = await new Promise((resolve, reject) => {
         this.conexion.query(query, args, (err, res) => {
           if (err) {
@@ -171,9 +163,9 @@ export default class AlmacenamientoActividadRealizada {
             res.forEach((element) => {
               arregloActividadesRealizadas.push({
                 id: element.id,
-                idTrimestre: element.trimestre_id,
-                cantidad: element.cantidad,
+                idReporteParcial: element.reporte_parcial_id,
                 idActividad: element.actividad_de_usuario_id,
+                cantidad: element.cantidad,
               });
             });
             resolve(arregloActividadesRealizadas);

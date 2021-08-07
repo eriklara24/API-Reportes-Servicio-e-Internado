@@ -1,5 +1,5 @@
 /* eslint-disable linebreak-style */
-import database from '../../database';
+import database from '../../../database';
 
 export default async function crearReporteFinalDos(req: any, res: any) {
   try {
@@ -11,7 +11,7 @@ export default async function crearReporteFinalDos(req: any, res: any) {
         innovacionAportada: req.body.innovacionAportada,
         conclusiones: req.body.conclusiones,
         propuestas: req.body.propuestas,
-        actividadesRealizdas: [],
+        actividadesRealizadas: [],
         atencionesRealizadas: [],
       });
     return res.status(201).send(nuevoReporteFinalDos);

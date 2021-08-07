@@ -123,12 +123,9 @@ export default class AlmacenamientoAtencionRealizada {
       return deleteInfo;
     }
 
-    async obtenerPorIdUsuarioIdTrimestre(idUsuario: number, idTrimestre: number) {
-      const query = 'SELECT * FROM atencion_realizada WHERE (usuario_id = ? AND trimestre_id = ?)';
-      const args = [
-        idUsuario,
-        idTrimestre,
-      ];
+    async obtenerPorIdReporteParcial(idReporteParcial: number) {
+      const query = 'SELECT * FROM atencion_realizada WHERE reporte_parcial_id = ?';
+      const args = [idReporteParcial];
       const promesaAtencionRealizada: any = await new Promise((resolve, reject) => {
         this.conexion.query(query, args, (err, res) => {
           if (err) {
@@ -140,7 +137,7 @@ export default class AlmacenamientoAtencionRealizada {
             res.forEach((element) => {
               arregloAtencionesRealizadas.push({
                 id: element.id,
-                idTrimestre: element.trimestre_id,
+                idReporteParcial: element.reporte_parcial_id,
                 tipo: element.tipo,
                 cantidad: element.cantidad,
                 idUsuario: element.usuario_id,
