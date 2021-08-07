@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable max-len */
 /* Archivo y clase Store para la tabla de Atenciones Realizadas
  * Esta clase permite realizar todas las operaciones de tipo
@@ -120,5 +121,36 @@ export default class AlmacenamientoAtencionRealizada {
       });
 
       return deleteInfo;
+    }
+
+    async obtenerPorIdUsuarioIdTrimestre(idUsuario: number, idTrimestre: number) {
+      const query = 'SELECT * FROM atencion_realizada WHERE (usuario_id = ? AND trimestre_id = ?)';
+      const args = [
+        idUsuario,
+        idTrimestre,
+      ];
+      const promesaAtencionRealizada: any = await new Promise((resolve, reject) => {
+        this.conexion.query(query, args, (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.length < 1) {
+            reject(new ItemNotFound());
+          } else {
+            const arregloAtencionesRealizadas: AtencionesRealizadas[] = [];
+            res.forEach((element) => {
+              arregloAtencionesRealizadas.push({
+                id: element.id,
+                idTrimestre: element.trimestre_id,
+                tipo: element.tipo,
+                cantidad: element.cantidad,
+                idUsuario: element.usuario_id,
+              });
+            });
+            resolve(arregloAtencionesRealizadas);
+          }
+        });
+      });
+
+      return promesaAtencionRealizada;
     }
 }

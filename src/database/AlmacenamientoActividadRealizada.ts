@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable max-len */
 /* Archivo y clase Store para la tabla de Actividades Realizadas
  * Esta clase permite realizar todas las operaciones de tipo
@@ -146,5 +147,40 @@ export default class AlmacenamientoActividadRealizada {
       });
 
       return selectInfo;
+    }
+
+    async obtenerPorIdUsuarioIdTrimestre(idUsuario: number, idTrimestre: number) {
+      const query = 'SELECT ar.id, ar.trimestre_id, ar.cantidad, ar.actividad_de_usuario_id'
+        + ' FROM actividad_realizada AS ar'
+        + ' JOIN actividad_de_usuario AS au'
+        + ' JOIN servicio AS s'
+        + ' ON (ar.actividad_de_usuario_id = au.id AND au.servicio_id = s.id)'
+        + ' WHERE (s.usuario_id = ? AND ar.trimestre_id = ?)';
+      const args = [
+        idUsuario,
+        idTrimestre,
+      ];
+      const promesaActividadRealizada: any = await new Promise((resolve, reject) => {
+        this.conexion.query(query, args, (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.length < 1) {
+            reject(new ItemNotFound());
+          } else {
+            const arregloActividadesRealizadas: ActividadesRealizadas[] = [];
+            res.forEach((element) => {
+              arregloActividadesRealizadas.push({
+                id: element.id,
+                idTrimestre: element.trimestre_id,
+                cantidad: element.cantidad,
+                idActividad: element.actividad_de_usuario_id,
+              });
+            });
+            resolve(arregloActividadesRealizadas);
+          }
+        });
+      });
+
+      return promesaActividadRealizada;
     }
 }
