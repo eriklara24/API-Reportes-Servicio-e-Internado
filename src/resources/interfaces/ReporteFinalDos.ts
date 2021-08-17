@@ -5,7 +5,7 @@ import AtencionesRealizadas from './AtencionesRealizadas';
 
 /* eslint-disable semi */
 export default interface ReporteFinalDos {
-    id?: number;
+    id: number;
     idServicio: number;
     metaAlcanzada: string;
     metodologiaUtilizada: string;

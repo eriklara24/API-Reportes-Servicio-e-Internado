@@ -30,6 +30,7 @@ export default async function actualizarReporte(req: any, res: any) {
     // Creación de nuevas atenciones y actividades realizadas
     req.body.actividadesRealizadas.forEach((element) => {
       database.almacenamientoActividadRealizada.crearActividadRealizada({
+        id: 0,
         idActividad: element.idActividad,
         idReporteParcial: reporteActualizado.id,
         cantidad: element.cantidad,
@@ -38,6 +39,7 @@ export default async function actualizarReporte(req: any, res: any) {
 
     req.body.atencionesRealizadas.forEach((element) => {
       database.almacenamientoAtencionRealizada.crearAtencionRealizada({
+        id: 0,
         idReporteParcial: reporteActualizado.id,
         idUsuario: element.idUsuario,
         tipo: element.tipo,

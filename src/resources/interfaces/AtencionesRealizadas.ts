@@ -3,7 +3,7 @@
  */
 
 interface AtencionesRealizadas {
-    id?: number;
+    id: number;
     idReporteParcial: number;
     idUsuario: number;
     tipo: number;

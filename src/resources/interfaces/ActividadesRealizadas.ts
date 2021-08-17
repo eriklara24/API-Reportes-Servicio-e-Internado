@@ -3,7 +3,7 @@
  */
 
 interface ActividadesRealizadas {
-    id?: number;
+    id: number;
     idActividad: number;
     idReporteParcial: number;
     cantidad: number;
