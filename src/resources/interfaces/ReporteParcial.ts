@@ -5,7 +5,7 @@ import AtencionesRealizadas from './AtencionesRealizadas';
 
 /* eslint-disable semi */
 export default interface ReporteParcial {
-    id?: number;
+    id: number;
     idServicio: number;
     idTrimestre: number;
     actualizado: string;
