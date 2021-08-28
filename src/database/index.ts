@@ -11,12 +11,19 @@ import AlmacenamientoServicioGeneral from './AlmacenamientoServicioGeneral';
 
 class Database {
   almacenamientoUsuario: AlmacenamientoUsuario;
+
   almacenamientoTrimestre: AlmacenamientoTrimestre;
+
   almacenamientoReporteParcial: AlmacenamientoReporteParcial;
+
   almacenamientoReporteFinalDos: AlmacenamientoReporteFinalDos;
+
   almacenamientoActividadDeUsuario: AlmacenamientoActividadDeUsuario;
+
   almacenamientoActividadRealizada: AlmacenamientoActividadRealizada;
+
   almacenamientoAtencionRealizada: AlmacenamientoAtencionRealizada;
+
   almacenamientoServicioGeneral: AlmacenamientoServicioGeneral;
 
   constructor() {

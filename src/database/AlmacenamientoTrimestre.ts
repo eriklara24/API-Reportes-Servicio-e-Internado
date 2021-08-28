@@ -57,6 +57,37 @@ export default class AlmacenamientoTrimestre {
       return promesaTrimestre;
     }
 
+    public async obtenerPorFechas(fechaInicio: string, fechaFin: string): Promise<Trimestre[]> {
+      const query = 'SELECT * FROM trimestre '
+      + 'WHERE trimestre.fecha_inicio BETWEEN ? AND ? '
+      + 'AND trimestre.fecha_fin BETWEEN ? AND ? ';
+      const datos: Trimestre[] = [];
+      const args = [
+        fechaInicio, fechaFin, fechaInicio, fechaFin,
+      ];
+      const promise: any = await new Promise((resolve, reject) => {
+        this.conection.query(query, args, (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.length < 1) {
+            resolve(datos);
+          } else {
+            for (let i = 0; i < res.length; i += 1) {
+              const aux = {
+                id: res[i].id,
+                fechaInicio: res[i].fecha_inicio,
+                fechaFin: res[i].fecha_fin,
+              };
+              datos.push(aux);
+            }
+            resolve(datos);
+          }
+        });
+      });
+
+      return promise;
+    }
+
     async actualizarTrimestre(trimestre: Trimestre): Promise<Trimestre> {
       const query = 'UPDATE trimestre SET fecha_inicio=?, fecha_fin=? WHERE id=?';
       const args = [

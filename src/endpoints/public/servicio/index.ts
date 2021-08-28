@@ -1,6 +1,7 @@
 /* eslint-disable linebreak-style */
 import crearServicio from './crearServicio';
 import actualizarServicio from './actualizarServicio';
+import obtenerCompleto from './obtenerCompleto';
 
 const express = require('express');
 
@@ -10,5 +11,6 @@ enrutadorServicio.use(express.json());
 
 enrutadorServicio.post('/', crearServicio);
 enrutadorServicio.put('/', actualizarServicio);
+enrutadorServicio.get('/:usuarioId', obtenerCompleto);
 
 export default enrutadorServicio;

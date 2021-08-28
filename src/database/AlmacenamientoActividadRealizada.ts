@@ -75,6 +75,65 @@ export default class AlmacenamientoActividadRealizada {
       return selectInfo;
     }
 
+    /** Método para obtener las actividades realizadas de un reporte */
+    public async obtenerPorIdReporte(idReporte: number): Promise<ActividadesRealizadas[]> {
+      const select = 'SELECT * FROM actividad_realizada WHERE reporte_parcial_id = ?';
+      const datos: ActividadesRealizadas[] = [];
+      const promise: any = await new Promise((resolve, reject) => {
+        this.conexion.query(select, [idReporte], (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.length < 1) {
+            resolve(datos);
+          } else {
+            for (let i = 0; i < res.length; i += 1) {
+              const aux = {
+                id: res[i].id,
+                idActividad: res[i].actividad_de_usuario_id,
+                idReporteParcial: res[i].reporte_parcial_id,
+                cantidad: res[i].cantidad,
+              };
+              datos.push(aux);
+            }
+            resolve(datos);
+          }
+        });
+      });
+
+      return promise;
+    }
+
+    /** Método para obtener las actividades realizadas de un usuario */
+    public async obtenerPorIdUsuario(idUsuario: number): Promise<ActividadesRealizadas[]> {
+      const select = 'SELECT actividad_realizada.* FROM servicio '
+      + 'JOIN actividad_de_usuario ON actividad_de_usuario.servicio_id = servicio.id '
+      + 'JOIN actividad_realizada ON actividad_realizada.actividad_de_usuario_id = actividad_de_usuario.id '
+      + 'WHERE servicio.usuario_id = ?';
+      const datos: ActividadesRealizadas[] = [];
+      const promise: any = await new Promise((resolve, reject) => {
+        this.conexion.query(select, [idUsuario], (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.length < 1) {
+            resolve(datos);
+          } else {
+            for (let i = 0; i < res.length; i += 1) {
+              const aux = {
+                id: res[i].id,
+                idActividad: res[i].actividad_de_usuario_id,
+                idReporteParcial: res[i].reporte_parcial_id,
+                cantidad: res[i].cantidad,
+              };
+              datos.push(aux);
+            }
+            resolve(datos);
+          }
+        });
+      });
+
+      return promise;
+    }
+
     /** Actualizar todos los valores de un campo de la tabla actividad_realizada de MySQL */
     public async actualizarActividadRealizada(actividad: ActividadesRealizadas): Promise<ActividadesRealizadas> {
       const update = 'UPDATE actividad_realizada SET actividad_de_usuario_id=?, reporte_parcial_id=?, cantidad=? '
