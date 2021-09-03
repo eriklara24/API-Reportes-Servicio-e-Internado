@@ -4,6 +4,6 @@
     "database" : {
         "user" : "root",
         "password" : "dolphR0ot",
-        "name" : "Servicio-Medicina"
+        "name" : "Servicio_Medicina"
     }
 }
