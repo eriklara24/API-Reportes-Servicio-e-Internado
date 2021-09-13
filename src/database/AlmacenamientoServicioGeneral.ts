@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable max-len */
 /* Archivo y clase Store para la tabla de Servicio General
  * Incluye las operaciones CRUD solo para la tabla de servicio de datos generales.
@@ -105,7 +106,7 @@ export default class AlmacenamientoServicioGeneral {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
-            reject(new ItemNotFound());
+            resolve(false);
           } else {
             const datos = {
               id: res[0].id,
