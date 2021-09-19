@@ -4,10 +4,12 @@ import enrutadorReporte from './reporte';
 import enrutadorServicio from './servicio';
 
 const express = require('express');
+const cors = require('cors');
 
 const publicRouter = express.Router();
+publicRouter.use(cors());
 
-publicRouter.use('/reporteFinalDos', enrutadorReporteFinalDos);
+publicRouter.use('/reporte-final-2', enrutadorReporteFinalDos);
 publicRouter.use('/reporte', enrutadorReporte);
 publicRouter.use('/servicio', enrutadorServicio);
 
