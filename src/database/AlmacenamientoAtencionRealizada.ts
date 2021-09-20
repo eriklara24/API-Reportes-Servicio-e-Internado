@@ -10,7 +10,7 @@
 
 import mysql = require('mysql');
 import AtencionesRealizadas from '../resources/interfaces/AtencionesRealizadas';
-import ItemNotFound from './errors/ItemNotFound';
+import ObjetoNoEncontrado from './errors/ObjetoNoEncontrado';
 
 export default class AlmacenamientoAtencionRealizada {
     private conexion : mysql.Connection;
@@ -24,7 +24,7 @@ export default class AlmacenamientoAtencionRealizada {
 
     /** Insertar valores en la tabla atencion_realizada de MySQL */
     public async crearAtencionRealizada(atencion: AtencionesRealizadas): Promise<AtencionesRealizadas> {
-      const insert = 'INSERT INTO atencion_realizada(usuario_id, reporte_parcial_id, tipo, cantidad) '
+      const consulta = 'INSERT INTO atencion_realizada(usuario_id, reporte_parcial_id, tipo, cantidad) '
       + 'VALUES(?, ?, ?, ?)';
       const args = [
         atencion.idUsuario,
@@ -33,7 +33,7 @@ export default class AlmacenamientoAtencionRealizada {
         atencion.cantidad,
       ];
       const insertInfo: any = await new Promise((resolve, reject) => {
-        this.conexion.query(insert, args, (err, res) => {
+        this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else {
@@ -54,14 +54,14 @@ export default class AlmacenamientoAtencionRealizada {
 
     /** Obtener todos los valores de la tabla atencion_realizada de MySQL */
     public async obtenerAtencionRealizada(id: number): Promise<AtencionesRealizadas> {
-      const select = 'SELECT * FROM atencion_realizada WHERE id=?';
+      const consulta = 'SELECT * FROM atencion_realizada WHERE id=?';
       const args = [id];
       const selectInfo: any = await new Promise((resolve, reject) => {
-        this.conexion.query(select, args, (err, res) => {
+        this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             const datosAtencion = {
               id: res[0].id,
@@ -80,10 +80,10 @@ export default class AlmacenamientoAtencionRealizada {
 
     /** Método para obtener todas las atenciones realizadas de un reporte */
     public async obtenerPorIdReporte(idReporte: number): Promise<AtencionesRealizadas[]> {
-      const select = 'SELECT * FROM atencion_realizada WHERE reporte_parcial_id = ?';
+      const consulta = 'SELECT * FROM atencion_realizada WHERE reporte_parcial_id = ?';
       const datos: AtencionesRealizadas[] = [];
       const promise: any = await new Promise((resolve, reject) => {
-        this.conexion.query(select, [idReporte], (err, res) => {
+        this.conexion.query(consulta, [idReporte], (err, res) => {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
@@ -109,11 +109,11 @@ export default class AlmacenamientoAtencionRealizada {
 
     /** Método para obtener todas las atenciones realizadas de un usuario */
     public async obtenerPorIdUsuario(idUsuario: number): Promise<AtencionesRealizadas[]> {
-      const select = 'SELECT * FROM atencion_realizada '
+      const consulta = 'SELECT * FROM atencion_realizada '
       + 'WHERE usuario_id = ?';
       const datos: AtencionesRealizadas[] = [];
       const promise: any = await new Promise((resolve, reject) => {
-        this.conexion.query(select, [idUsuario], (err, res) => {
+        this.conexion.query(consulta, [idUsuario], (err, res) => {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
@@ -139,7 +139,7 @@ export default class AlmacenamientoAtencionRealizada {
 
     /** Actualizar todos los valores de un campo de la tabla atencion_realizada de MySQL */
     public async actualizarAtencionRealizada(atencion: AtencionesRealizadas): Promise<AtencionesRealizadas> {
-      const update = 'UPDATE atencion_realizada SET usuario_id=?, reporte_parcial_id=?, tipo=?, cantidad=? '
+      const consulta = 'UPDATE atencion_realizada SET usuario_id=?, reporte_parcial_id=?, tipo=?, cantidad=? '
       + 'WHERE id=?';
       const args = [
         atencion.idUsuario,
@@ -149,11 +149,11 @@ export default class AlmacenamientoAtencionRealizada {
         atencion.id,
       ];
       const updateInfo: any = await new Promise((resolve, reject) => {
-        this.conexion.query(update, args, (err, res) => {
+        this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.affectedRows < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             resolve(atencion);
           }
@@ -165,14 +165,14 @@ export default class AlmacenamientoAtencionRealizada {
 
     /** Eliminar todos los valores de un campo de la tabla atencion_realizada de MySQL */
     public async eliminarAtencionRealizada(id: number): Promise<boolean> {
-      const del = 'DELETE FROM atencion_realizada WHERE id=?';
+      const consulta = 'DELETE FROM atencion_realizada WHERE id=?';
       const args = [id];
       const deleteInfo: any = await new Promise((resolve, reject) => {
-        this.conexion.query(del, args, (err, res) => {
+        this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.affectedRows < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             resolve(true);
           }
@@ -183,14 +183,14 @@ export default class AlmacenamientoAtencionRealizada {
     }
 
     async obtenerPorIdReporteParcial(idReporteParcial: number) {
-      const query = 'SELECT * FROM atencion_realizada WHERE reporte_parcial_id = ?';
+      const consulta = 'SELECT * FROM atencion_realizada WHERE reporte_parcial_id = ?';
       const args = [idReporteParcial];
       const promesaAtencionRealizada: any = await new Promise((resolve, reject) => {
-        this.conexion.query(query, args, (err, res) => {
+        this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             const arregloAtencionesRealizadas: AtencionesRealizadas[] = [];
             res.forEach((element) => {

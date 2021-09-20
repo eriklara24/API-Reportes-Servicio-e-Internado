@@ -8,7 +8,7 @@
 
 import mysql = require('mysql');
 import ActividadesDeUsuario from '../resources/interfaces/ActividadesDeUsuario';
-import ItemNotFound from './errors/ItemNotFound';
+import ObjetoNoEncontrado from './errors/ObjetoNoEncontrado';
 
 export default class AlmacenamientoActividadDeUsuario {
     private conexion : mysql.Connection;
@@ -23,13 +23,13 @@ export default class AlmacenamientoActividadDeUsuario {
     /** Insertar valores en la tabla actividad_de_usuario de MySQL */
     // eslint-disable-next-line max-len
     public async crearActividadDeUsuario(actividad: ActividadesDeUsuario): Promise<ActividadesDeUsuario> {
-      const insert = 'INSERT INTO actividad_de_usuario(servicio_id, descripcion) VALUES (?, ?)';
+      const consulta = 'INSERT INTO actividad_de_usuario(servicio_id, descripcion) VALUES (?, ?)';
       const args = [
         actividad.idServicio,
         actividad.descripcion,
       ];
       const insertInfo: any = await new Promise((resolve, reject) => {
-        this.conexion.query(insert, args, (err, res) => {
+        this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else {
@@ -48,14 +48,14 @@ export default class AlmacenamientoActividadDeUsuario {
 
     /** Obtener todos los valores de la tabla actividad_de_usuario de MySQL */
     public async obtenerActividadDeUsuario(id: number): Promise<ActividadesDeUsuario> {
-      const select = 'SELECT * FROM actividad_de_usuario WHERE id=?';
+      const consulta = 'SELECT * FROM actividad_de_usuario WHERE id=?';
       const args = [id];
       const selectInfo: any = await new Promise((resolve, reject) => {
-        this.conexion.query(select, args, (err, res) => {
+        this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             const datosActividad = {
               id: res[0].id,
@@ -72,12 +72,12 @@ export default class AlmacenamientoActividadDeUsuario {
 
     /** Método para obtener las actividades de un usuario */
     public async obtenerPorIdUsuario(idUsuario: number): Promise<ActividadesDeUsuario[]> {
-      const select = 'SELECT actividad_de_usuario.* FROM servicio JOIN actividad_de_usuario '
+      const consulta = 'SELECT actividad_de_usuario.* FROM servicio JOIN actividad_de_usuario '
       + 'ON actividad_de_usuario.servicio_id = servicio.id '
       + 'WHERE servicio.usuario_id = ?';
       const datos: ActividadesDeUsuario[] = [];
       const promise: any = await new Promise((resolve, reject) => {
-        this.conexion.query(select, [idUsuario], (err, res) => {
+        this.conexion.query(consulta, [idUsuario], (err, res) => {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
@@ -101,13 +101,13 @@ export default class AlmacenamientoActividadDeUsuario {
 
     /** Método para obtener una actividad de usuario por el texto de la descripción */
     public async obtenerPorDescripcion(descripcion: string): Promise<ActividadesDeUsuario> {
-      const select = 'SELECT * FROM `actividad_de_usuario` WHERE descripcion = ?';
+      const consulta = 'SELECT * FROM `actividad_de_usuario` WHERE descripcion = ?';
       const promise: any = await new Promise((resolve, reject) => {
-        this.conexion.query(select, [descripcion], (err, res) => {
+        this.conexion.query(consulta, [descripcion], (err, res) => {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
-            resolve(new ItemNotFound());
+            resolve(new ObjetoNoEncontrado());
           } else {
             const datosActividad = {
               id: res[0].id,
@@ -125,18 +125,18 @@ export default class AlmacenamientoActividadDeUsuario {
     /** Actualizar todos los valores de un campo de la tabla actividad_de_usuario de MySQL */
     // eslint-disable-next-line max-len
     public async actualizarActividadDeUsuario(actividad: ActividadesDeUsuario): Promise<ActividadesDeUsuario> {
-      const update = 'UPDATE actividad_de_usuario SET servicio_id=?, descripcion=? WHERE id=?';
+      const consulta = 'UPDATE actividad_de_usuario SET servicio_id=?, descripcion=? WHERE id=?';
       const args = [
         actividad.idServicio,
         actividad.descripcion,
         actividad.id,
       ];
       const updateInfo: any = await new Promise((resolve, reject) => {
-        this.conexion.query(update, args, (err, res) => {
+        this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.affectedRows < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             resolve(actividad);
           }
@@ -148,14 +148,14 @@ export default class AlmacenamientoActividadDeUsuario {
 
     /** Eliminar todos los valores de un campo de la tabla actividad_de_usuario de MySQL */
     public async eliminarActividadDeUsuario(id: number): Promise<boolean> {
-      const del = 'DELETE FROM actividad_de_usuario WHERE id=?';
+      const consulta = 'DELETE FROM actividad_de_usuario WHERE id=?';
       const args = [id];
       const deleteInfo: any = await new Promise((resolve, reject) => {
-        this.conexion.query(del, args, (err, res) => {
+        this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.affectedRows < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             resolve(true);
           }

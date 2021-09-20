@@ -4,7 +4,7 @@
 /* Archivo y función para crear un nuevo reporte para un usuario/servicio */
 
 import baseDatos from '../../../database';
-import ItemNotFound from '../../../database/errors/ItemNotFound';
+import ObjetoNoEncontrado from '../../../database/errors/ObjetoNoEncontrado';
 import ActividadesDeUsuario from '../../../resources/interfaces/ActividadesDeUsuario';
 import ActividadesRealizadas from '../../../resources/interfaces/ActividadesRealizadas';
 import AtencionesRealizadas from '../../../resources/interfaces/AtencionesRealizadas';
@@ -47,7 +47,7 @@ export default async function crearReporte(req: any, res: any) {
   try {
     servicio = await baseDatos.almacenamientoServicioGeneral.obtenerPorIdUsuario(idUsuario);
   } catch (err) {
-    if (err instanceof ItemNotFound) {
+    if (err instanceof ObjetoNoEncontrado) {
       return res.status(404).send({ code: 'Error: datos generales de servicio no creados' });
     }
     return res.status(500).send({ code: 'Error de base de datos' });
@@ -108,7 +108,7 @@ export default async function crearReporte(req: any, res: any) {
     for (let i = 0; i < actividades.length; i += 1) {
       const auxActividad = await baseDatos.almacenamientoActividadDeUsuario
         .obtenerPorDescripcion(actividades[i].descripcion);
-      if (auxActividad instanceof ItemNotFound) { // si la actividad no existe ya
+      if (auxActividad instanceof ObjetoNoEncontrado) { // si la actividad no existe ya
         let nuevaActividad: ActividadesDeUsuario = {
           id: 0, // id dummy
           idServicio: servicio.id,
