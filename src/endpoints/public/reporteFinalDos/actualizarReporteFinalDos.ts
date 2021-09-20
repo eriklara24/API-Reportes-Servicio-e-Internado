@@ -1,9 +1,9 @@
 /* eslint-disable linebreak-style */
-import database from '../../../database';
+import baseDatos from '../../../database';
 
 export default async function actualizarReporteFinalDos(req: any, res: any) {
   try {
-    const reporteFinalDosActualizado = await database
+    const reporteFinalDosActualizado = await baseDatos
       .almacenamientoReporteFinalDos.actualizarReporteFinalDos({
         id: req.body.id,
         idServicio: req.body.idServicio,
