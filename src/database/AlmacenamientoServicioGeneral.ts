@@ -11,7 +11,7 @@
 
 import mysql = require('mysql');
 import ServicioEInternado from '../resources/interfaces/ServicioEInternado';
-import ItemNotFound from './errors/ItemNotFound';
+import ObjetoNoEncontrado from './errors/ObjetoNoEncontrado';
 
 export default class AlmacenamientoServicioGeneral {
     private conexion : mysql.Connection;
@@ -25,7 +25,7 @@ export default class AlmacenamientoServicioGeneral {
 
     /** Insertar valores en la tabla servicio de MySQL */
     public async crearServicioGeneral(servicio: ServicioEInternado): Promise<ServicioEInternado> {
-      const insert = 'INSERT INTO servicio(usuario_id, entidad_receptora, receptor, programa,'
+      const consulta = 'INSERT INTO servicio(usuario_id, entidad_receptora, receptor, programa,'
       + 'objetivos_programa, fecha_inicio, fecha_fin, total_horas, horario_hora_inicio, horario_hora_fin)'
       + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
       const args = [
@@ -41,7 +41,7 @@ export default class AlmacenamientoServicioGeneral {
         servicio.horarioHoraFin,
       ];
       const insertInfo: any = await new Promise((resolve, reject) => {
-        this.conexion.query(insert, args, (err, res) => {
+        this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else {
@@ -68,14 +68,14 @@ export default class AlmacenamientoServicioGeneral {
 
     /** Obtener todos los valores de la tabla servicio de MySQL */
     public async obtenerServicioGeneral(id: number): Promise<ServicioEInternado> {
-      const select = 'SELECT * FROM servicio WHERE id=?';
+      const consulta = 'SELECT * FROM servicio WHERE id=?';
       const args = [id];
       const selectInfo: any = await new Promise((resolve, reject) => {
-        this.conexion.query(select, args, (err, res) => {
+        this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             const datosServicio = {
               id: res[0].id,
@@ -100,9 +100,9 @@ export default class AlmacenamientoServicioGeneral {
 
     /** Método para obtener los datos generales de un servicio a partir de un ID de usuario */
     public async obtenerPorIdUsuario(idUsuario: number): Promise<ServicioEInternado> {
-      const select = 'SELECT * FROM `servicio` WHERE usuario_id = ?';
+      const consulta = 'SELECT * FROM `servicio` WHERE usuario_id = ?';
       const promise: any = await new Promise((resolve, reject) => {
-        this.conexion.query(select, [idUsuario], (err, res) => {
+        this.conexion.query(consulta, [idUsuario], (err, res) => {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
@@ -131,7 +131,7 @@ export default class AlmacenamientoServicioGeneral {
 
     /** Actualizar todos los valores de un campo de la tabla servicio de MySQL */
     public async actualizarServicioGeneral(servicio: ServicioEInternado): Promise<ServicioEInternado> {
-      const update = 'UPDATE servicio SET usuario_id=?, entidad_receptora=?, receptor=?, programa=?,'
+      const consulta = 'UPDATE servicio SET usuario_id=?, entidad_receptora=?, receptor=?, programa=?,'
       + 'objetivos_programa=?, fecha_inicio=?, fecha_fin=?, total_horas=?, horario_hora_inicio=?,'
       + 'horario_hora_fin=? WHERE id=?';
       const args = [
@@ -148,11 +148,11 @@ export default class AlmacenamientoServicioGeneral {
         servicio.id,
       ];
       const updateInfo: any = await new Promise((resolve, reject) => {
-        this.conexion.query(update, args, (err, res) => {
+        this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.affectedRows < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             resolve(servicio);
           }
@@ -164,14 +164,14 @@ export default class AlmacenamientoServicioGeneral {
 
     /** Eliminar todos los valores de un campo de la tabla servicio de MySQL */
     public async eliminarServicioGeneral(id: number): Promise<boolean> {
-      const del = 'DELETE FROM servicio WHERE id=?';
+      const consulta = 'DELETE FROM servicio WHERE id=?';
       const args = [id];
       const deleteInfo: any = await new Promise((resolve, reject) => {
-        this.conexion.query(del, args, (err, res) => {
+        this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.affectedRows < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             resolve(true);
           }

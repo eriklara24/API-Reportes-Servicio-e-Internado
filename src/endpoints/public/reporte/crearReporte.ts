@@ -1,10 +1,10 @@
-/* eslint-disable no-await-in-loop */
 /* eslint-disable linebreak-style */
+/* eslint-disable no-await-in-loop */
 /* eslint-disable max-len */
 /* Archivo y función para crear un nuevo reporte para un usuario/servicio */
 
-import database from '../../../database';
-import ItemNotFound from '../../../database/errors/ItemNotFound';
+import baseDatos from '../../../database';
+import ObjetoNoEncontrado from '../../../database/errors/ObjetoNoEncontrado';
 import ActividadesDeUsuario from '../../../resources/interfaces/ActividadesDeUsuario';
 import ActividadesRealizadas from '../../../resources/interfaces/ActividadesRealizadas';
 import AtencionesRealizadas from '../../../resources/interfaces/AtencionesRealizadas';
@@ -45,16 +45,16 @@ export default async function crearReporte(req: any, res: any) {
   }
   // 2.- Obtener los datos del servicio del usuario.
   try {
-    servicio = await database.almacenamientoServicioGeneral.obtenerPorIdUsuario(idUsuario);
+    servicio = await baseDatos.almacenamientoServicioGeneral.obtenerPorIdUsuario(idUsuario);
   } catch (err) {
-    if (err instanceof ItemNotFound) {
+    if (err instanceof ObjetoNoEncontrado) {
       return res.status(404).send({ code: 'Error: datos generales de servicio no creados' });
     }
     return res.status(500).send({ code: 'Error de base de datos' });
   }
   // 3.- Obtener los trimestres de este servicio
   try {
-    trimestres = await database.almacenamientoTrimestre
+    trimestres = await baseDatos.almacenamientoTrimestre
       .obtenerPorFechas(servicio.fechaInicio, servicio.fechaFin);
     if (trimestres.length < 4) {
       return res.status(500).send({ code: 'Error: trimestres para este servicio no creados.' });
@@ -64,7 +64,7 @@ export default async function crearReporte(req: any, res: any) {
   }
   // 4.- Obtener los reportes ya creados y crear el nuevo reporte.
   try {
-    reportes = await database.almacenamientoReporteParcial.obtenerPorIdUsuario(idUsuario);
+    reportes = await baseDatos.almacenamientoReporteParcial.obtenerPorIdUsuario(idUsuario);
     if (reportes.length > 4) {
       return res.status(404).send({ code: 'Error: todos los reportes ya creados.' });
     }
@@ -81,7 +81,7 @@ export default async function crearReporte(req: any, res: any) {
       actividadesRealizadas: dummy,
       atencionesRealizadas: dummy2,
     };
-    nuevoReporte = await database.almacenamientoReporteParcial.crearReporteParcial(nuevoReporte);
+    nuevoReporte = await baseDatos.almacenamientoReporteParcial.crearReporteParcial(nuevoReporte);
   } catch (err) {
     return res.status(500).send({ code: 'Error de base de datos' });
   }
@@ -97,7 +97,7 @@ export default async function crearReporte(req: any, res: any) {
         cantidad: element.cantidad,
       };
       // eslint-disable-next-line no-unused-vars
-      nuevaAtencion = await database.almacenamientoAtencionRealizada
+      nuevaAtencion = await baseDatos.almacenamientoAtencionRealizada
         .crearAtencionRealizada(nuevaAtencion); // Se almacena por cuestión de la promesa, aunque no se vuelve a usuar.
     });
   } catch (err) {
@@ -106,15 +106,15 @@ export default async function crearReporte(req: any, res: any) {
   // 6.- Guardar actividades de usuario y actividades realizadas con los datos en variables.
   try {
     for (let i = 0; i < actividades.length; i += 1) {
-      const auxActividad = await database.almacenamientoActividadDeUsuario
+      const auxActividad = await baseDatos.almacenamientoActividadDeUsuario
         .obtenerPorDescripcion(actividades[i].descripcion);
-      if (auxActividad instanceof ItemNotFound) { // si la actividad no existe ya
+      if (auxActividad instanceof ObjetoNoEncontrado) { // si la actividad no existe ya
         let nuevaActividad: ActividadesDeUsuario = {
           id: 0, // id dummy
           idServicio: servicio.id,
           descripcion: actividades[i].descripcion,
         };
-        nuevaActividad = await database.almacenamientoActividadDeUsuario
+        nuevaActividad = await baseDatos.almacenamientoActividadDeUsuario
           .crearActividadDeUsuario(nuevaActividad);
         let nuevaRealizada: ActividadesRealizadas = {
           id: 0, // id dummy, similar a casos superiores.
@@ -122,7 +122,7 @@ export default async function crearReporte(req: any, res: any) {
           idReporteParcial: nuevoReporte.id,
           cantidad: realizadas[i].cantidad,
         };
-        nuevaRealizada = await database.almacenamientoActividadRealizada
+        nuevaRealizada = await baseDatos.almacenamientoActividadRealizada
           .crearActividadRealizada(nuevaRealizada);
       } else { // si existe
         let nuevaRealizada: ActividadesRealizadas = {
@@ -131,7 +131,7 @@ export default async function crearReporte(req: any, res: any) {
           idReporteParcial: nuevoReporte.id,
           cantidad: realizadas[i].cantidad,
         };
-        nuevaRealizada = await database.almacenamientoActividadRealizada
+        nuevaRealizada = await baseDatos.almacenamientoActividadRealizada
           .crearActividadRealizada(nuevaRealizada);
       }
     }

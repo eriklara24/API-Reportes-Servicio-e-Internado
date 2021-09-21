@@ -1,9 +1,10 @@
+/* eslint-disable linebreak-style */
 /*
 Archivo y función para obtener todos los datos de
 un reporte por número de reporte
 */
 
-import database from '../../../database';
+import baseDatos from '../../../database';
 import ActividadesRealizadas from '../../../resources/interfaces/ActividadesRealizadas';
 import AtencionesRealizadas from '../../../resources/interfaces/AtencionesRealizadas';
 import ReporteParcial from '../../../resources/interfaces/ReporteParcial';
@@ -13,7 +14,7 @@ export default async function obtenerPorNumero(req: any, res: any) {
     const { numeroReporte } = req.params;
     const idUsuario = 218745595; // Hardcodeado
     // Obtener todos los reportes de este servicio
-    const reportesParciales: ReporteParcial[] = await database.almacenamientoReporteParcial
+    const reportesParciales: ReporteParcial[] = await baseDatos.almacenamientoReporteParcial
       .obtenerPorIdUsuario(idUsuario);
 
     // Validar que el reporte parcial que se busca exista
@@ -21,11 +22,11 @@ export default async function obtenerPorNumero(req: any, res: any) {
       return res.status(404).send({ code: 'El reporte parcial no existe' });
     }
 
-    const actividadesRealizadas: ActividadesRealizadas[] = await database
+    const actividadesRealizadas: ActividadesRealizadas[] = await baseDatos
       .almacenamientoActividadRealizada
       .obtenerPorIdReporte(reportesParciales[numeroReporte - 1].id);
 
-    const atencionesRealizadas: AtencionesRealizadas[] = await database
+    const atencionesRealizadas: AtencionesRealizadas[] = await baseDatos
       .almacenamientoAtencionRealizada
       .obtenerPorIdReporte(reportesParciales[numeroReporte - 1].id);
 

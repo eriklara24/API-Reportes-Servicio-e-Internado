@@ -1,10 +1,10 @@
 /* eslint-disable linebreak-style */
-import database from '../../../database';
+import baseDatos from '../../../database';
 
 export default async function actualizarReporte(req: any, res: any) {
   try {
     // Actualización del reporte
-    const reporteActualizado = await database
+    const reporteActualizado = await baseDatos
       .almacenamientoReporteParcial.actualizarReporteParcial({
         id: req.body.id,
         idServicio: req.body.idServicio,
@@ -15,21 +15,21 @@ export default async function actualizarReporte(req: any, res: any) {
       });
 
     // Eliminación de atenciones y actividades realizadas
-    const actividadesRealizadas = await database.almacenamientoActividadRealizada
+    const actividadesRealizadas = await baseDatos.almacenamientoActividadRealizada
       .obtenerPorIdReporteParcial(reporteActualizado.id);
     actividadesRealizadas.forEach((element) => {
-      database.almacenamientoActividadRealizada.eliminarActividadRealizada(element.id);
+      baseDatos.almacenamientoActividadRealizada.eliminarActividadRealizada(element.id);
     });
 
-    const atencionesRealizadas = await database.almacenamientoAtencionRealizada
+    const atencionesRealizadas = await baseDatos.almacenamientoAtencionRealizada
       .obtenerPorIdReporteParcial(reporteActualizado.id);
     atencionesRealizadas.forEach((element) => {
-      database.almacenamientoAtencionRealizada.eliminarAtencionRealizada(element.id);
+      baseDatos.almacenamientoAtencionRealizada.eliminarAtencionRealizada(element.id);
     });
 
     // Creación de nuevas atenciones y actividades realizadas
     req.body.actividadesRealizadas.forEach((element) => {
-      database.almacenamientoActividadRealizada.crearActividadRealizada({
+      baseDatos.almacenamientoActividadRealizada.crearActividadRealizada({
         id: 0,
         idActividad: element.idActividad,
         idReporteParcial: reporteActualizado.id,
@@ -38,7 +38,7 @@ export default async function actualizarReporte(req: any, res: any) {
     });
 
     req.body.atencionesRealizadas.forEach((element) => {
-      database.almacenamientoAtencionRealizada.crearAtencionRealizada({
+      baseDatos.almacenamientoAtencionRealizada.crearAtencionRealizada({
         id: 0,
         idReporteParcial: reporteActualizado.id,
         idUsuario: element.idUsuario,

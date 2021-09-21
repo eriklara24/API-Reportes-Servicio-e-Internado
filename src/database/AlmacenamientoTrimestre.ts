@@ -2,7 +2,7 @@
 /* eslint-disable no-useless-catch */
 import mysql = require('mysql');
 import Trimestre from '../resources/interfaces/Trimestre';
-import ItemNotFound from './errors/ItemNotFound';
+import ObjetoNoEncontrado from './errors/ObjetoNoEncontrado';
 
 export default class AlmacenamientoTrimestre {
     private conection: mysql.Connection;
@@ -15,13 +15,13 @@ export default class AlmacenamientoTrimestre {
     }
 
     async crearTrimestre(trimestre: Trimestre): Promise<Trimestre> {
-      const query = 'INSERT INTO trimestre(fecha_inicio, fecha_fin) VALUES (?, ?)';
+      const consulta = 'INSERT INTO trimestre(fecha_inicio, fecha_fin) VALUES (?, ?)';
       const args = [
         trimestre.fechaInicio,
         trimestre.fechaFin,
       ];
       const promesaTrimestre: any = await new Promise((resolve, reject) => {
-        this.conection.query(query, args, (err, res) => {
+        this.conection.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else {
@@ -36,13 +36,13 @@ export default class AlmacenamientoTrimestre {
     }
 
     async obtenerTrimestre(id: number): Promise<Trimestre> {
-      const query = 'SELECT * FROM trimestre WHERE id=?';
+      const consulta = 'SELECT * FROM trimestre WHERE id=?';
       const promesaTrimestre: any = await new Promise((resolve, reject) => {
-        this.conection.query(query, [String(id)], (err, res) => {
+        this.conection.query(consulta, [String(id)], (err, res) => {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             const trimestre = {
               id: res[0].id,
@@ -58,7 +58,7 @@ export default class AlmacenamientoTrimestre {
     }
 
     public async obtenerPorFechas(fechaInicio: string, fechaFin: string): Promise<Trimestre[]> {
-      const query = 'SELECT * FROM trimestre '
+      const consulta = 'SELECT * FROM trimestre '
       + 'WHERE trimestre.fecha_inicio BETWEEN ? AND ? '
       + 'AND trimestre.fecha_fin BETWEEN ? AND ? ';
       const datos: Trimestre[] = [];
@@ -66,7 +66,7 @@ export default class AlmacenamientoTrimestre {
         fechaInicio, fechaFin, fechaInicio, fechaFin,
       ];
       const promise: any = await new Promise((resolve, reject) => {
-        this.conection.query(query, args, (err, res) => {
+        this.conection.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
@@ -89,18 +89,18 @@ export default class AlmacenamientoTrimestre {
     }
 
     async actualizarTrimestre(trimestre: Trimestre): Promise<Trimestre> {
-      const query = 'UPDATE trimestre SET fecha_inicio=?, fecha_fin=? WHERE id=?';
+      const consulta = 'UPDATE trimestre SET fecha_inicio=?, fecha_fin=? WHERE id=?';
       const args = [
         trimestre.fechaInicio,
         trimestre.fechaFin,
         String(trimestre.id),
       ];
       const promesaTrimestre: any = await new Promise((resolve, reject) => {
-        this.conection.query(query, args, (err, res) => {
+        this.conection.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.affectedRows < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             resolve(trimestre);
           }
@@ -111,13 +111,13 @@ export default class AlmacenamientoTrimestre {
     }
 
     async eliminarTrimestre(id: number): Promise<boolean> {
-      const query = 'DELETE FROM trimestre WHERE id=?';
+      const consulta = 'DELETE FROM trimestre WHERE id=?';
       const promesaTrimestre: any = await new Promise((resolve, reject) => {
-        this.conection.query(query, [String(id)], (err, res) => {
+        this.conection.query(consulta, [String(id)], (err, res) => {
           if (err) {
             reject(err);
           } else if (res.affectedRows < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             resolve(true);
           }

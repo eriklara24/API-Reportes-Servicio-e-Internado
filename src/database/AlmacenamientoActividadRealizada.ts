@@ -10,7 +10,7 @@
 
 import mysql = require('mysql');
 import ActividadesRealizadas from '../resources/interfaces/ActividadesRealizadas';
-import ItemNotFound from './errors/ItemNotFound';
+import ObjetoNoEncontrado from './errors/ObjetoNoEncontrado';
 
 export default class AlmacenamientoActividadRealizada {
     private conexion : mysql.Connection;
@@ -24,7 +24,7 @@ export default class AlmacenamientoActividadRealizada {
 
     /** Insertar valores en la tabla actividad_realizada de MySQL */
     public async crearActividadRealizada(actividad: ActividadesRealizadas): Promise<ActividadesRealizadas> {
-      const insert = 'INSERT INTO actividad_realizada(actividad_de_usuario_id, reporte_parcial_id, cantidad)'
+      const consulta = 'INSERT INTO actividad_realizada(actividad_de_usuario_id, reporte_parcial_id, cantidad)'
       + 'VALUES (?, ?, ?)';
       const args = [
         actividad.idActividad,
@@ -32,7 +32,7 @@ export default class AlmacenamientoActividadRealizada {
         actividad.cantidad,
       ];
       const insertInfo: any = await new Promise((resolve, reject) => {
-        this.conexion.query(insert, args, (err, res) => {
+        this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else {
@@ -52,14 +52,14 @@ export default class AlmacenamientoActividadRealizada {
 
     /** Obtener todos los valores de la tabla actividad_realizada de MySQL */
     public async obtenerActividadRealizada(id: number): Promise<ActividadesRealizadas> {
-      const select = 'SELECT * FROM actividad_realizada WHERE id=?';
+      const consulta = 'SELECT * FROM actividad_realizada WHERE id=?';
       const args = [id];
       const selectInfo: any = await new Promise((resolve, reject) => {
-        this.conexion.query(select, args, (err, res) => {
+        this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             const datosActividad = {
               id: res[0].id,
@@ -77,10 +77,10 @@ export default class AlmacenamientoActividadRealizada {
 
     /** Método para obtener las actividades realizadas de un reporte */
     public async obtenerPorIdReporte(idReporte: number): Promise<ActividadesRealizadas[]> {
-      const select = 'SELECT * FROM actividad_realizada WHERE reporte_parcial_id = ?';
+      const consulta = 'SELECT * FROM actividad_realizada WHERE reporte_parcial_id = ?';
       const datos: ActividadesRealizadas[] = [];
       const promise: any = await new Promise((resolve, reject) => {
-        this.conexion.query(select, [idReporte], (err, res) => {
+        this.conexion.query(consulta, [idReporte], (err, res) => {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
@@ -105,13 +105,13 @@ export default class AlmacenamientoActividadRealizada {
 
     /** Método para obtener las actividades realizadas de un usuario */
     public async obtenerPorIdUsuario(idUsuario: number): Promise<ActividadesRealizadas[]> {
-      const select = 'SELECT actividad_realizada.* FROM servicio '
+      const consulta = 'SELECT actividad_realizada.* FROM servicio '
       + 'JOIN actividad_de_usuario ON actividad_de_usuario.servicio_id = servicio.id '
       + 'JOIN actividad_realizada ON actividad_realizada.actividad_de_usuario_id = actividad_de_usuario.id '
       + 'WHERE servicio.usuario_id = ?';
       const datos: ActividadesRealizadas[] = [];
       const promise: any = await new Promise((resolve, reject) => {
-        this.conexion.query(select, [idUsuario], (err, res) => {
+        this.conexion.query(consulta, [idUsuario], (err, res) => {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
@@ -136,7 +136,7 @@ export default class AlmacenamientoActividadRealizada {
 
     /** Actualizar todos los valores de un campo de la tabla actividad_realizada de MySQL */
     public async actualizarActividadRealizada(actividad: ActividadesRealizadas): Promise<ActividadesRealizadas> {
-      const update = 'UPDATE actividad_realizada SET actividad_de_usuario_id=?, reporte_parcial_id=?, cantidad=? '
+      const consulta = 'UPDATE actividad_realizada SET actividad_de_usuario_id=?, reporte_parcial_id=?, cantidad=? '
       + 'WHERE id=?';
       const args = [
         actividad.idActividad,
@@ -145,11 +145,11 @@ export default class AlmacenamientoActividadRealizada {
         actividad.id,
       ];
       const updateInfo: any = await new Promise((resolve, reject) => {
-        this.conexion.query(update, args, (err, res) => {
+        this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.affectedRows < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             resolve(actividad);
           }
@@ -161,14 +161,14 @@ export default class AlmacenamientoActividadRealizada {
 
     /** Eliminar todos los valores de un campo de la tabla actividad_realizada de MySQL */
     public async eliminarActividadRealizada(id: number): Promise<boolean> {
-      const del = 'DELETE FROM actividad_realizada WHERE id=?';
+      const consulta = 'DELETE FROM actividad_realizada WHERE id=?';
       const args = [id];
       const deleteInfo: any = await new Promise((resolve, reject) => {
-        this.conexion.query(del, args, (err, res) => {
+        this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.affectedRows < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             resolve(true);
           }
@@ -180,14 +180,14 @@ export default class AlmacenamientoActividadRealizada {
 
     public async obtenerPorIDReporte(idReporte: number): Promise<ActividadesRealizadas[]> {
       const actividadesRealizadas: ActividadesRealizadas[] = [];
-      const select = 'SELECT * FROM actividad_realizada WHERE idActividad=?';
+      const consulta = 'SELECT * FROM actividad_realizada WHERE idActividad=?';
       const args = [idReporte];
       const selectInfo: any = await new Promise((resolve, reject) => {
-        this.conexion.query(select, args, (err, res) => {
+        this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             res.array.forEach((actividad) => {
               const datosActividad = {
@@ -209,14 +209,14 @@ export default class AlmacenamientoActividadRealizada {
     }
 
     async obtenerPorIdReporteParcial(idReporteParcial: number) {
-      const query = 'SELECT * FROM actividad_realizada WHERE reporte_parcial_id = ?';
+      const consulta = 'SELECT * FROM actividad_realizada WHERE reporte_parcial_id = ?';
       const args = [idReporteParcial];
       const promesaActividadRealizada: any = await new Promise((resolve, reject) => {
-        this.conexion.query(query, args, (err, res) => {
+        this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             const arregloActividadesRealizadas: ActividadesRealizadas[] = [];
             res.forEach((element) => {

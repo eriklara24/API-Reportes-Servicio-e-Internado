@@ -1,9 +1,9 @@
-/* eslint-disable no-await-in-loop */
 /* eslint-disable linebreak-style */
+/* eslint-disable no-await-in-loop */
 /* eslint-disable no-useless-catch */
 import mysql = require('mysql');
 import ReporteFinalDos from '../resources/interfaces/ReporteFinalDos';
-import ItemNotFound from './errors/ItemNotFound';
+import ObjetoNoEncontrado from './errors/ObjetoNoEncontrado';
 import AlmacenamientoActividadRealizada from './AlmacenamientoActividadRealizada';
 import AlmacenamientoAtencionRealizada from './AlmacenamientoAtencionRealizada';
 
@@ -24,7 +24,7 @@ export default class AlmacenamientoReporteFinalDos {
     }
 
     async crearReporteFinalDos(reporteFinalDos: ReporteFinalDos): Promise<ReporteFinalDos> {
-      const query = 'INSERT INTO reporte_final'
+      const consulta = 'INSERT INTO reporte_final'
           + ' (servicio_id, meta_alcanzada, metodologia, innovacion, conclusion, propuestas)'
           + ' VALUES (?, ?, ?, ?, ?, ?)';
       const args = [
@@ -36,7 +36,7 @@ export default class AlmacenamientoReporteFinalDos {
         reporteFinalDos.propuestas,
       ];
       const promesaReporteFinalDos: any = await new Promise((resolve, reject) => {
-        this.conection.query(query, args, (err, res) => {
+        this.conection.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else {
@@ -51,13 +51,13 @@ export default class AlmacenamientoReporteFinalDos {
     }
 
     async obtenerReporteFinalDos(id: number): Promise<ReporteFinalDos> {
-      const query = 'SELECT * FROM reporte_final WHERE id=?';
+      const consulta = 'SELECT * FROM reporte_final WHERE id=?';
       const promesaReporteFinalDos: any = await new Promise((resolve, reject) => {
-        this.conection.query(query, [String(id)], (err, res) => {
+        this.conection.query(consulta, [String(id)], (err, res) => {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             const reporteFinalDos = {
               id: res[0].id,
@@ -108,7 +108,7 @@ export default class AlmacenamientoReporteFinalDos {
     }
 
     async actualizarReporteFinalDos(reporteFinalDos: ReporteFinalDos): Promise<ReporteFinalDos> {
-      const query = 'UPDATE reporte_final'
+      const consulta = 'UPDATE reporte_final'
         + ' SET servicio_id=?, meta_alcanzada=?, metodologia=?, innovacion=?, conclusion=?, propuestas=?'
         + ' WHERE id=?';
       const args = [
@@ -121,11 +121,11 @@ export default class AlmacenamientoReporteFinalDos {
         String(reporteFinalDos.id),
       ];
       const promesaReporteFinalDos: any = await new Promise((resolve, reject) => {
-        this.conection.query(query, args, (err, res) => {
+        this.conection.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.affectedRows < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             resolve(reporteFinalDos);
           }
@@ -136,13 +136,13 @@ export default class AlmacenamientoReporteFinalDos {
     }
 
     async eliminarReporteFinalDos(id: number): Promise<boolean> {
-      const query = 'DELETE FROM reporte_final WHERE id=?';
+      const consulta = 'DELETE FROM reporte_final WHERE id=?';
       const promesaReporteParcial: any = await new Promise((resolve, reject) => {
-        this.conection.query(query, [String(id)], (err, res) => {
+        this.conection.query(consulta, [String(id)], (err, res) => {
           if (err) {
             reject(err);
           } else if (res.affectedRows < 1) {
-            reject(new ItemNotFound());
+            reject(new ObjetoNoEncontrado());
           } else {
             resolve(true);
           }
