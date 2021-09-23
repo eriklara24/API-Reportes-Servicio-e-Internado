@@ -25,11 +25,11 @@ export default class AlmacenamientoReporteFinalDos {
 
     async crearReporteFinalDos(reporteFinalDos: ReporteFinalDos): Promise<ReporteFinalDos> {
       const consulta = 'INSERT INTO reporte_final'
-          + ' (servicio_id, meta_alcanzada, metodologia, innovacion, conclusion, propuestas)'
+          + ' (servicio_id, metas_alcanzadas, metodologia, innovacion, conclusion, propuestas)'
           + ' VALUES (?, ?, ?, ?, ?, ?)';
       const args = [
         reporteFinalDos.idServicio,
-        reporteFinalDos.metaAlcanzada,
+        reporteFinalDos.metasAlcanzadas,
         reporteFinalDos.metodologiaUtilizada,
         reporteFinalDos.innovacionAportada,
         reporteFinalDos.conclusiones,
@@ -62,7 +62,7 @@ export default class AlmacenamientoReporteFinalDos {
             const reporteFinalDos = {
               id: res[0].id,
               idServicio: res[0].servicio_id,
-              metaAlcanzada: res[0].meta_alcanzada,
+              metasAlcanzadas: res[0].metas_alcanzadas,
               metodologiaUtilizada: res[0].metodologia,
               innovacionAportada: res[0].innovacion,
               conclusiones: res[0].conclusion,
@@ -91,7 +91,7 @@ export default class AlmacenamientoReporteFinalDos {
             const datos = {
               id: res[0].id,
               idServicio: res[0].servicio_id,
-              metaAlcanzada: res[0].meta_alcanzada,
+              metasAlcanzadas: res[0].metas_alcanzadas,
               metodologiaUtilizada: res[0].metodologia,
               innovacionAportada: res[0].innovacion,
               conclusiones: res[0].conclusion,
@@ -109,11 +109,11 @@ export default class AlmacenamientoReporteFinalDos {
 
     async actualizarReporteFinalDos(reporteFinalDos: ReporteFinalDos): Promise<ReporteFinalDos> {
       const consulta = 'UPDATE reporte_final'
-        + ' SET servicio_id=?, meta_alcanzada=?, metodologia=?, innovacion=?, conclusion=?, propuestas=?'
+        + ' SET servicio_id=?, metas_alcanzadas=?, metodologia=?, innovacion=?, conclusion=?, propuestas=?'
         + ' WHERE id=?';
       const args = [
         reporteFinalDos.idServicio,
-        reporteFinalDos.metaAlcanzada,
+        reporteFinalDos.metasAlcanzadas,
         reporteFinalDos.metodologiaUtilizada,
         reporteFinalDos.innovacionAportada,
         reporteFinalDos.conclusiones,

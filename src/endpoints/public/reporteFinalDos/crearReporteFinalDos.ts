@@ -7,7 +7,7 @@ export default async function crearReporteFinalDos(req: any, res: any) {
       .almacenamientoReporteFinalDos.crearReporteFinalDos({
         id: 0,
         idServicio: req.body.idServicio,
-        metaAlcanzada: req.body.metaAlcanzada,
+        metasAlcanzadas: req.body.metasAlcanzadas,
         metodologiaUtilizada: req.body.metodologiaUtilizada,
         innovacionAportada: req.body.innovacionAportada,
         conclusiones: req.body.conclusiones,

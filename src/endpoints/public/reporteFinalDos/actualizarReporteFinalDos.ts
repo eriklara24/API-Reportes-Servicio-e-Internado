@@ -7,7 +7,7 @@ export default async function actualizarReporteFinalDos(req: any, res: any) {
       .almacenamientoReporteFinalDos.actualizarReporteFinalDos({
         id: req.body.id,
         idServicio: req.body.idServicio,
-        metaAlcanzada: req.body.metaAlcanzada,
+        metasAlcanzadas: req.body.metasAlcanzadas,
         metodologiaUtilizada: req.body.metodologiaUtilizada,
         innovacionAportada: req.body.innovacionAportada,
         conclusiones: req.body.conclusiones,

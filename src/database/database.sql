@@ -166,7 +166,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `Servicio_Medicina`.`reporte_final` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `servicio_id` INT NOT NULL,
-  `meta_alcanzada` TEXT NOT NULL,
+  `metas_alcanzadas` TEXT NOT NULL,
   `metodologia` TEXT NOT NULL,
   `innovacion` TEXT NOT NULL,
   `conclusion` TEXT NOT NULL,
