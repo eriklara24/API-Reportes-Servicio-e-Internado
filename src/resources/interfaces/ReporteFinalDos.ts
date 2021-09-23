@@ -7,7 +7,7 @@ import AtencionesRealizadas from './AtencionesRealizadas';
 export default interface ReporteFinalDos {
     id: number;
     idServicio: number;
-    metaAlcanzada: string;
+    metasAlcanzadas: string;
     metodologiaUtilizada: string;
     innovacionAportada: string;
     conclusiones: string;
