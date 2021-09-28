@@ -37,9 +37,6 @@ export default async function crearReporte(req: any, res: any) {
     idServicio = req.body.idServicio;
     actividadesDeUsuario = req.body.actividadesUsuario;
     atencionesRealizadas = req.body.atencionesRealizadas;
-    if (req.body.numeroReporte !== 1) {
-      return res.status(404).send({ code: 'El reporte enviado ya existe' });
-    }
   } catch (err) {
     return res.status(400).send({ code: 'Error: datos enviados no son válidos' });
   }
@@ -70,6 +67,9 @@ export default async function crearReporte(req: any, res: any) {
     reportes = await baseDatos.almacenamientoReporteParcial.obtenerPorIdUsuario(idUsuario);
     if (reportes.length >= 4) {
       return res.status(404).send({ code: 'Error: todos los reportes ya creados.' });
+    }
+    if (req.body.numeroReporte - 1 !== reportes.length) { // el anterior tiene que estar creado
+      return res.status(404).send({ code: 'El reporte anterior no ha sido creado' });
     }
     const idTrimestre = trimestres[reportes.length].id;
     const actualizado = obtenerFecha();
@@ -109,15 +109,9 @@ export default async function crearReporte(req: any, res: any) {
   // 6.- Guardar actividades de usuario y actividades realizadas con los datos en variables.
   try {
     for (let i = 0; i < actividadesDeUsuario.length; i += 1) {
+      let idActividadDeUsuario = 0;
       if (actividadesDeUsuario[i].id !== 0) { // ya existe, solo crear realizadas
-        const nuevaRealizada: ActividadesRealizadas = {
-          id: 0,
-          idActividad: actividadesDeUsuario[i].id,
-          idReporteParcial: nuevoReporte.id,
-          cantidad: actividadesDeUsuario[i].cantidad,
-        };
-        await baseDatos.almacenamientoActividadRealizada
-          .crearActividadRealizada(nuevaRealizada);
+        idActividadDeUsuario = actividadesDeUsuario[i].id;
       } else { // si no existe
         const nuevaActividad: ActividadesDeUsuario = {
           id: 0, // id dummy
@@ -126,15 +120,16 @@ export default async function crearReporte(req: any, res: any) {
         };
         await baseDatos.almacenamientoActividadDeUsuario
           .crearActividadDeUsuario(nuevaActividad);
-        const nuevaRealizada: ActividadesRealizadas = {
-          id: 0, // id dummy, similar a casos superiores.
-          idActividad: nuevaActividad.id,
-          idReporteParcial: nuevoReporte.id,
-          cantidad: actividadesDeUsuario[i].cantidad,
-        };
-        await baseDatos.almacenamientoActividadRealizada
-          .crearActividadRealizada(nuevaRealizada);
+        idActividadDeUsuario = nuevaActividad.id;
       }
+      let nuevaRealizada: ActividadesRealizadas = {
+        id: 0,
+        idActividad: idActividadDeUsuario,
+        idReporteParcial: nuevoReporte.id,
+        cantidad: actividadesDeUsuario[i].cantidad,
+      };
+      nuevaRealizada = await baseDatos.almacenamientoActividadRealizada
+        .crearActividadRealizada(nuevaRealizada);
     }
   } catch (err) {
     return res.status(500).send({ code: 'Error de base de datos' });
