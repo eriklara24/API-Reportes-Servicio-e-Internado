@@ -22,10 +22,10 @@ function obtenerFecha(): string {
 }
 
 export default async function crearReporte(req: any, res: any) {
-  let idUsuario = 218745595;
-  let actividades: ActividadesDeUsuario[] = [];
-  let realizadas: ActividadesRealizadas[] = [];
-  let atenciones: AtencionesRealizadas[] = [];
+  let idUsuario = 0;
+  let idServicio = 0;
+  let actividadesDeUsuario: any[] = [];
+  let atencionesRealizadas: any[] = [];
   let servicio: ServicioEInternado;
   let trimestres: Trimestre[] = [];
   let reportes: ReporteParcial[] = [];
@@ -33,19 +33,19 @@ export default async function crearReporte(req: any, res: any) {
 
   // 1.- Obtener los datos del body
   try {
-    idUsuario = 218745599; // Hasta saber que hacer con las sesiones, esto queda hardcodeado.
-    actividades = req.body.actividadesDeUsuario; // Si se mandan n actividades
-    realizadas = req.body.actividadesRealizadas; // Tiene que haber n realizadas.
-    atenciones = req.body.atencionesRealizadas;
-    if (actividades.length !== realizadas.length) {
-      return res.status(400).send({ code: 'Error: datos enviados no son válidos' });
+    idUsuario = req.body.idUsuario;
+    idServicio = req.body.idServicio;
+    actividadesDeUsuario = req.body.actividadesUsuario;
+    atencionesRealizadas = req.body.atencionesRealizadas;
+    if (req.body.numeroReporte !== 1) {
+      return res.status(404).send({ code: 'El reporte enviado ya existe' });
     }
   } catch (err) {
     return res.status(400).send({ code: 'Error: datos enviados no son válidos' });
   }
   // 2.- Obtener los datos del servicio del usuario.
   try {
-    servicio = await baseDatos.almacenamientoServicioGeneral.obtenerPorIdUsuario(idUsuario);
+    servicio = await baseDatos.almacenamientoServicioGeneral.obtenerServicioGeneral(idServicio);
   } catch (err) {
     if (err instanceof ObjetoNoEncontrado) {
       return res.status(404).send({ code: 'Error: datos generales de servicio no creados' });
@@ -65,10 +65,9 @@ export default async function crearReporte(req: any, res: any) {
   // 4.- Obtener los reportes ya creados y crear el nuevo reporte.
   try {
     reportes = await baseDatos.almacenamientoReporteParcial.obtenerPorIdUsuario(idUsuario);
-    if (reportes.length > 4) {
+    if (reportes.length >= 4) {
       return res.status(404).send({ code: 'Error: todos los reportes ya creados.' });
     }
-    const idServicio = servicio.id;
     const idTrimestre = trimestres[reportes.length].id;
     const actualizado = obtenerFecha();
     const dummy: ActividadesRealizadas[] = []; // Necesarios en la interfaz, pero no para la DB
@@ -88,31 +87,37 @@ export default async function crearReporte(req: any, res: any) {
   // 5.- Guardar las atenciones con los datos del servicio y el nuevo reporte.
   try {
     const idNuevoReporte = nuevoReporte.id;
-    atenciones.forEach(async (element) => {
+    for (let i = 0; i < atencionesRealizadas.length; i += 1) {
       let nuevaAtencion: AtencionesRealizadas = {
-        id: 0, // Un id dummy que se ignora
+        id: 0,
         idReporteParcial: idNuevoReporte,
         idUsuario,
-        tipo: element.tipo,
-        cantidad: element.cantidad,
+        tipo: i,
+        cantidad: atencionesRealizadas[i].cantidad,
       };
-      // eslint-disable-next-line no-unused-vars
       nuevaAtencion = await baseDatos.almacenamientoAtencionRealizada
         .crearAtencionRealizada(nuevaAtencion); // Se almacena por cuestión de la promesa, aunque no se vuelve a usuar.
-    });
+    }
   } catch (err) {
     return res.status(500).send({ code: 'Error de base de datos' });
   }
   // 6.- Guardar actividades de usuario y actividades realizadas con los datos en variables.
   try {
-    for (let i = 0; i < actividades.length; i += 1) {
-      const auxActividad = await baseDatos.almacenamientoActividadDeUsuario
-        .obtenerPorDescripcion(actividades[i].descripcion);
-      if (auxActividad instanceof ObjetoNoEncontrado) { // si la actividad no existe ya
+    for (let i = 0; i < actividadesDeUsuario.length; i += 1) {
+      if (actividadesDeUsuario[i].id !== 0) { // ya existe, solo crear realizadas
+        let nuevaRealizada: ActividadesRealizadas = {
+          id: 0,
+          idActividad: actividadesDeUsuario[i].id,
+          idReporteParcial: nuevoReporte.id,
+          cantidad: actividadesDeUsuario[i].cantidad,
+        };
+        nuevaRealizada = await baseDatos.almacenamientoActividadRealizada
+          .crearActividadRealizada(nuevaRealizada);
+      } else { // si no existe
         let nuevaActividad: ActividadesDeUsuario = {
           id: 0, // id dummy
-          idServicio: servicio.id,
-          descripcion: actividades[i].descripcion,
+          idServicio,
+          descripcion: actividadesDeUsuario[i].descripcion,
         };
         nuevaActividad = await baseDatos.almacenamientoActividadDeUsuario
           .crearActividadDeUsuario(nuevaActividad);
@@ -120,16 +125,7 @@ export default async function crearReporte(req: any, res: any) {
           id: 0, // id dummy, similar a casos superiores.
           idActividad: nuevaActividad.id,
           idReporteParcial: nuevoReporte.id,
-          cantidad: realizadas[i].cantidad,
-        };
-        nuevaRealizada = await baseDatos.almacenamientoActividadRealizada
-          .crearActividadRealizada(nuevaRealizada);
-      } else { // si existe
-        let nuevaRealizada: ActividadesRealizadas = {
-          id: 0, // id dummy, similar a casos superiores.
-          idActividad: auxActividad.id,
-          idReporteParcial: nuevoReporte.id,
-          cantidad: realizadas[i].cantidad,
+          cantidad: actividadesDeUsuario[i].cantidad,
         };
         nuevaRealizada = await baseDatos.almacenamientoActividadRealizada
           .crearActividadRealizada(nuevaRealizada);

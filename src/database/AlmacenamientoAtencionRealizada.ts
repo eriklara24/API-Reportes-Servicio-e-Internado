@@ -185,14 +185,14 @@ export default class AlmacenamientoAtencionRealizada {
     async obtenerPorIdReporteParcial(idReporteParcial: number) {
       const consulta = 'SELECT * FROM atencion_realizada WHERE reporte_parcial_id = ?';
       const args = [idReporteParcial];
+      const arregloAtencionesRealizadas: AtencionesRealizadas[] = [];
       const promesaAtencionRealizada: any = await new Promise((resolve, reject) => {
         this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
-            reject(new ObjetoNoEncontrado());
+            resolve(arregloAtencionesRealizadas);
           } else {
-            const arregloAtencionesRealizadas: AtencionesRealizadas[] = [];
             res.forEach((element) => {
               arregloAtencionesRealizadas.push({
                 id: element.id,
