@@ -180,16 +180,16 @@ export default class AlmacenamientoActividadRealizada {
 
     public async obtenerPorIDReporte(idReporte: number): Promise<ActividadesRealizadas[]> {
       const actividadesRealizadas: ActividadesRealizadas[] = [];
-      const consulta = 'SELECT * FROM actividad_realizada WHERE idActividad=?';
+      const consulta = 'SELECT * FROM actividad_realizada WHERE reporte_parcial_id=?';
       const args = [idReporte];
       const selectInfo: any = await new Promise((resolve, reject) => {
         this.conexion.query(consulta, args, (err, res) => {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
-            reject(new ObjetoNoEncontrado());
+            resolve(actividadesRealizadas);
           } else {
-            res.array.forEach((actividad) => {
+            res.forEach((actividad) => {
               const datosActividad = {
                 id: actividad.id,
                 idActividad: actividad.actividad_de_usuario_id,
