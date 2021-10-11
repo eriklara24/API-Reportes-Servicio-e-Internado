@@ -108,6 +108,7 @@ export default class AlmacenamientoReporteParcial {
         reporteParcial.actualizado,
         String(reporteParcial.id),
       ];
+
       const promesaReporteParcial: any = await new Promise((resolve, reject) => {
         this.conection.query(consulta, args, (err, res) => {
           if (err) {

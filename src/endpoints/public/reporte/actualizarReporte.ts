@@ -1,17 +1,30 @@
 /* eslint-disable linebreak-style */
 import baseDatos from '../../../database';
+import ReporteParcial from '../../../resources/interfaces/ReporteParcial';
 
 export default async function actualizarReporte(req: any, res: any) {
+  const { numeroReporte } = req.params;
+
+  const idUsuario = 1; // Hardcodeado
+  // Obtener todos los reportes de este servicio
+  const reportesParciales: ReporteParcial[] = await baseDatos.almacenamientoReporteParcial
+    .obtenerPorIdUsuario(idUsuario);
+
+  // Validar que el reporte parcial que se busca exista
+  if (reportesParciales.length + 1 < numeroReporte || numeroReporte < 1) {
+    return res.status(404).send({ code: 'El reporte parcial no existe' });
+  }
+
   try {
     // Actualización del reporte
     const reporteActualizado = await baseDatos
       .almacenamientoReporteParcial.actualizarReporteParcial({
-        id: req.body.id,
-        idServicio: req.body.idServicio,
-        idTrimestre: req.body.idTrimestre,
-        actualizado: req.body.actualizado,
-        actividadesRealizadas: req.body.actividadesRealizadas,
-        atencionesRealizadas: req.body.atencionesRealizadas,
+        id: reportesParciales[numeroReporte - 1].id,
+        idServicio: reportesParciales[numeroReporte - 1].idServicio,
+        idTrimestre: reportesParciales[numeroReporte - 1].idTrimestre,
+        actualizado: reportesParciales[numeroReporte - 1].actualizado,
+        actividadesRealizadas: reportesParciales[numeroReporte - 1].actividadesRealizadas,
+        atencionesRealizadas: reportesParciales[numeroReporte - 1].atencionesRealizadas,
       });
 
     // Eliminación de atenciones y actividades realizadas
@@ -26,7 +39,6 @@ export default async function actualizarReporte(req: any, res: any) {
     atencionesRealizadas.forEach((element) => {
       baseDatos.almacenamientoAtencionRealizada.eliminarAtencionRealizada(element.id);
     });
-
     // Creación de nuevas atenciones y actividades realizadas
     req.body.actividadesRealizadas.forEach((element) => {
       baseDatos.almacenamientoActividadRealizada.crearActividadRealizada({

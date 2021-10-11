@@ -10,7 +10,7 @@ const enrutadorReporte = express.Router();
 
 enrutadorReporte.use(express.json());
 
-enrutadorReporte.put('/', actualizarReporte);
+enrutadorReporte.put('/:numeroReporte', actualizarReporte);
 enrutadorReporte.get('/:id/:rol', obtenerPorID);
 enrutadorReporte.get('/:numeroReporte', obtenerPorNumero);
 enrutadorReporte.post('/', crearReporte);

@@ -23,8 +23,7 @@ function obtenerFecha(): string {
 
 export default async function crearReporte(req: any, res: any) {
   let idUsuario = 218745595;
-  let actividades: ActividadesDeUsuario[] = [];
-  let realizadas: ActividadesRealizadas[] = [];
+  let actividades: any[] = [];
   let atenciones: AtencionesRealizadas[] = [];
   let servicio: ServicioEInternado;
   let trimestres: Trimestre[] = [];
@@ -35,11 +34,7 @@ export default async function crearReporte(req: any, res: any) {
   try {
     idUsuario = 218745599; // Hasta saber que hacer con las sesiones, esto queda hardcodeado.
     actividades = req.body.actividadesDeUsuario; // Si se mandan n actividades
-    realizadas = req.body.actividadesRealizadas; // Tiene que haber n realizadas.
     atenciones = req.body.atencionesRealizadas;
-    if (actividades.length !== realizadas.length) {
-      return res.status(400).send({ code: 'Error: datos enviados no son válidos' });
-    }
   } catch (err) {
     return res.status(400).send({ code: 'Error: datos enviados no son válidos' });
   }
@@ -120,7 +115,7 @@ export default async function crearReporte(req: any, res: any) {
           id: 0, // id dummy, similar a casos superiores.
           idActividad: nuevaActividad.id,
           idReporteParcial: nuevoReporte.id,
-          cantidad: realizadas[i].cantidad,
+          cantidad: actividades[i].cantidad,
         };
         nuevaRealizada = await baseDatos.almacenamientoActividadRealizada
           .crearActividadRealizada(nuevaRealizada);
@@ -129,7 +124,7 @@ export default async function crearReporte(req: any, res: any) {
           id: 0, // id dummy, similar a casos superiores.
           idActividad: auxActividad.id,
           idReporteParcial: nuevoReporte.id,
-          cantidad: realizadas[i].cantidad,
+          cantidad: actividades[i].cantidad,
         };
         nuevaRealizada = await baseDatos.almacenamientoActividadRealizada
           .crearActividadRealizada(nuevaRealizada);
