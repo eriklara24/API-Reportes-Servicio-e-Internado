@@ -12,7 +12,7 @@ import ReporteParcial from '../../../resources/interfaces/ReporteParcial';
 export default async function obtenerPorNumero(req: any, res: any) {
   try {
     const { numeroReporte } = req.params;
-    const idUsuario = 218745595; // Hardcodeado
+    const idUsuario = 1; // Hardcodeado
     // Obtener todos los reportes de este servicio
     const reportesParciales: ReporteParcial[] = await baseDatos.almacenamientoReporteParcial
       .obtenerPorIdUsuario(idUsuario);

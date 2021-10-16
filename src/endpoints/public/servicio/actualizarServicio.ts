@@ -5,7 +5,7 @@ export default async function actualizarServicio(req: any, res: any) {
   try {
     const servicioActualizado = await baseDatos
       .almacenamientoServicioGeneral.actualizarServicioGeneral({
-        id: req.body.id,
+        id: req.params.idServicio,
         idUsuario: req.body.idUsuario,
         entidadReceptora: req.body.entidadReceptora,
         receptor: req.body.receptor,
@@ -13,7 +13,7 @@ export default async function actualizarServicio(req: any, res: any) {
         objetivosDelPrograma: req.body.objetivosDelPrograma,
         fechaInicio: req.body.fechaInicio,
         fechaFin: req.body.fechaFin,
-        totalDeHoras: req.body.totalDeHoras,
+        totalDeHoras: 0,
         horarioHoraInicio: req.body.horarioHoraInicio,
         horarioHoraFin: req.body.horarioHoraFin,
       });

@@ -22,7 +22,7 @@ function obtenerFecha(): string {
 }
 
 export default async function crearReporte(req: any, res: any) {
-  let idUsuario = 218745595;
+  let idUsuario = 1;
   let actividades: any[] = [];
   let atenciones: AtencionesRealizadas[] = [];
   let servicio: ServicioEInternado;
@@ -32,7 +32,7 @@ export default async function crearReporte(req: any, res: any) {
 
   // 1.- Obtener los datos del body
   try {
-    idUsuario = 218745599; // Hasta saber que hacer con las sesiones, esto queda hardcodeado.
+    idUsuario = 1; // Hasta saber que hacer con las sesiones, esto queda hardcodeado.
     actividades = req.body.actividadesDeUsuario; // Si se mandan n actividades
     atenciones = req.body.atencionesRealizadas;
   } catch (err) {

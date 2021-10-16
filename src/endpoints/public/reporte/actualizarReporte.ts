@@ -39,6 +39,7 @@ export default async function actualizarReporte(req: any, res: any) {
     atencionesRealizadas.forEach((element) => {
       baseDatos.almacenamientoAtencionRealizada.eliminarAtencionRealizada(element.id);
     });
+
     // Creación de nuevas atenciones y actividades realizadas
     req.body.actividadesRealizadas.forEach((element) => {
       baseDatos.almacenamientoActividadRealizada.crearActividadRealizada({
@@ -61,6 +62,6 @@ export default async function actualizarReporte(req: any, res: any) {
 
     return res.status(201).send(reporteActualizado);
   } catch (err) {
-    return res.status(404).send(err);
+    return res.status(500).send(err);
   }
 }

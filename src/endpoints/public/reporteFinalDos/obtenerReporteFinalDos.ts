@@ -14,7 +14,7 @@ function objetoVacio(obj: any): boolean {
 }
 
 export default async function obtenerReporteFinalDos(req: any, res: any) {
-  const idUsuario = 218745594; // Hardcodeado.
+  const idUsuario = 1; // Hardcodeado.
   try {
     const datosFinal = await baseDeDatos.almacenamientoReporteFinalDos
       .obtenerPorIdUsuario(idUsuario);

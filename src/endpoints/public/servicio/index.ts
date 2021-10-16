@@ -10,7 +10,7 @@ const enrutadorServicio = express.Router();
 enrutadorServicio.use(express.json());
 
 enrutadorServicio.post('/', crearServicio);
-enrutadorServicio.put('/', actualizarServicio);
+enrutadorServicio.put('/:idServicio', actualizarServicio);
 enrutadorServicio.get('/:usuarioId', obtenerCompleto);
 
 export default enrutadorServicio;
