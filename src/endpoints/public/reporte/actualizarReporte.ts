@@ -30,7 +30,7 @@ export default async function actualizarReporte(req: any, res: any) {
     idServicio = req.body.idServicio;
     actividadesDeUsuario = req.body.actividadesUsuario;
     atencionesRealizadas = req.body.atencionesRealizadas;
-    numeroReporte = req.body.numeroReporte;
+    numeroReporte = req.params.numeroReporte;
     if (numeroReporte < 1 || numeroReporte > 4) {
       return res.status(404).send({ code: 'Error: número de reporte no válido' });
     }
@@ -114,9 +114,9 @@ export default async function actualizarReporte(req: any, res: any) {
           idServicio,
           descripcion: actividadesDeUsuario[i].descripcion,
         };
-        await baseDatos.almacenamientoActividadDeUsuario
+        const actividadCreada = await baseDatos.almacenamientoActividadDeUsuario
           .crearActividadDeUsuario(nuevaActividad);
-        idActividadDeUsuario = nuevaActividad.id;
+        idActividadDeUsuario = actividadCreada.id;
       }
       let nuevaRealizada: ActividadesRealizadas = {
         id: 0,
