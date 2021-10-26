@@ -8,6 +8,7 @@
  */
 import baseDatos from '../../../database';
 import Servicio from '../../../resources/entities/Servicio';
+import Trimestre from '../../../resources/interfaces/Trimestre';
 
 export default async function obtenerCompleto(req: any, res: any) {
   const { usuarioId } = req.params;
@@ -17,6 +18,14 @@ export default async function obtenerCompleto(req: any, res: any) {
       return res.status(404).send({ code: 'Servicio no encontrado' });
     }
     const parciales = await baseDatos.almacenamientoReporteParcial.obtenerPorIdUsuario(usuarioId);
+    const reportesParciales: any[] = [];
+    parciales.forEach(async (element) => {
+      const trimestre: Trimestre = await baseDatos.almacenamientoTrimestre.obtenerTrimestre(element.idTrimestre);
+      const reporte : any = element;
+      reporte.fechaInicio = trimestre.fechaInicio;
+      reporte.fechaFin = trimestre.fechaFin;
+      reportesParciales.push(reporte);
+    });
     const final = await baseDatos.almacenamientoReporteFinalDos.obtenerPorIdUsuario(usuarioId);
     const actividades = await baseDatos.almacenamientoActividadDeUsuario.obtenerPorIdUsuario(usuarioId);
     const servicio = new Servicio(
@@ -31,7 +40,7 @@ export default async function obtenerCompleto(req: any, res: any) {
       generales.totalDeHoras,
       generales.horarioHoraInicio,
       generales.horarioHoraFin,
-      parciales,
+      reportesParciales,
       final,
       actividades,
     );

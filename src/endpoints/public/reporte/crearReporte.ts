@@ -118,9 +118,9 @@ export default async function crearReporte(req: any, res: any) {
           idServicio,
           descripcion: actividadesDeUsuario[i].descripcion,
         };
-        await baseDatos.almacenamientoActividadDeUsuario
+        const actividadCreada = await baseDatos.almacenamientoActividadDeUsuario
           .crearActividadDeUsuario(nuevaActividad);
-        idActividadDeUsuario = nuevaActividad.id;
+        idActividadDeUsuario = actividadCreada.id;
       }
       let nuevaRealizada: ActividadesRealizadas = {
         id: 0,

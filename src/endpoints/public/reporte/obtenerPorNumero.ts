@@ -8,6 +8,7 @@ import baseDatos from '../../../database';
 import ActividadesRealizadas from '../../../resources/interfaces/ActividadesRealizadas';
 import AtencionesRealizadas from '../../../resources/interfaces/AtencionesRealizadas';
 import ReporteParcial from '../../../resources/interfaces/ReporteParcial';
+import Trimestre from '../../../resources/interfaces/Trimestre';
 
 export default async function obtenerPorNumero(req: any, res: any) {
   try {
@@ -30,11 +31,16 @@ export default async function obtenerPorNumero(req: any, res: any) {
       .almacenamientoAtencionRealizada
       .obtenerPorIdReporte(reportesParciales[numeroReporte - 1].id);
 
+    const trimestre: Trimestre = await baseDatos
+      .almacenamientoTrimestre.obtenerTrimestre(reportesParciales[numeroReporte - 1].idTrimestre);
+
     // Regresar el reporte armado
-    const reporte: ReporteParcial = {
+    const reporte: any = {
       id: reportesParciales[numeroReporte - 1].id,
       idServicio: reportesParciales[numeroReporte - 1].idServicio,
       idTrimestre: reportesParciales[numeroReporte - 1].idTrimestre,
+      fechaInicio: trimestre.fechaInicio,
+      fechaFin: trimestre.fechaFin,
       actualizado: reportesParciales[numeroReporte - 1].actualizado,
       actividadesRealizadas,
       atencionesRealizadas,
