@@ -22,6 +22,7 @@ export default async function actualizarReporte(req: any, res: any) {
   let actividadesDeUsuario: any[] = [];
   let atencionesRealizadas: any[] = [];
   let numeroReporte = 0;
+  let horasRealizadas = 0;
   let nuevoReporte: ReporteParcial;
 
   // 1.- Obtener los datos del body
@@ -30,6 +31,7 @@ export default async function actualizarReporte(req: any, res: any) {
     idServicio = req.body.idServicio;
     actividadesDeUsuario = req.body.actividadesUsuario;
     atencionesRealizadas = req.body.atencionesRealizadas;
+    horasRealizadas = req.body.horasRealizadas;
     numeroReporte = req.params.numeroReporte;
     if (numeroReporte < 1 || numeroReporte > 4) {
       return res.status(404).send({ code: 'Error: número de reporte no válido' });
@@ -59,6 +61,7 @@ export default async function actualizarReporte(req: any, res: any) {
       idServicio: nuevoReporte.idServicio,
       idTrimestre: nuevoReporte.idTrimestre,
       actualizado: obtenerFecha(),
+      horasRealizadas,
       actividadesRealizadas: [],
       atencionesRealizadas: [],
     };

@@ -11,7 +11,6 @@ interface ServicioEInternado {
   objetivosDelPrograma: string;
   fechaInicio: string;
   fechaFin: string;
-  totalDeHoras: number;
   horarioHoraInicio: string;
   horarioHoraFin: string;
 }

@@ -33,8 +33,6 @@ export default class Servicio {
 
   private fechaFin: string;
 
-  private totalDeHoras: number;
-
   private horarioHoraInicio: string; // Mismo caso que las fechas.
 
   private horarioHoraFin: string;
@@ -54,7 +52,6 @@ export default class Servicio {
     objetivosDelPrograma: string,
     fechaInicio: string,
     fechaFin: string,
-    totalDeHoras: number,
     horarioHoraInicio: string,
     horarioHoraFin: string,
     parciales: ReporteParcial[],
@@ -69,7 +66,6 @@ export default class Servicio {
     this.objetivosDelPrograma = objetivosDelPrograma;
     this.fechaInicio = fechaInicio;
     this.fechaFin = fechaFin;
-    this.totalDeHoras = totalDeHoras;
     this.horarioHoraInicio = horarioHoraInicio;
     this.horarioHoraFin = horarioHoraFin;
     this.reportesParciales = parciales;
@@ -141,14 +137,6 @@ export default class Servicio {
 
   public getFechaFin(): string {
     return this.fechaFin;
-  }
-
-  public setTotalDeHoras(totalDeHoras: number) {
-    this.totalDeHoras = totalDeHoras;
-  }
-
-  public getTotalDeHoras(): number {
-    return this.totalDeHoras;
   }
 
   public setHorarioHoraInicio(horarioHoraInicio: string) {

@@ -13,7 +13,6 @@ export default async function crearServicio(req: any, res: any) {
         objetivosDelPrograma: req.body.objetivosDelPrograma,
         fechaInicio: '',
         fechaFin: '',
-        totalDeHoras: 0,
         horarioHoraInicio: req.body.horarioHoraInicio,
         horarioHoraFin: req.body.horarioHoraFin,
       });

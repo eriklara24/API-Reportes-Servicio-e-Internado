@@ -37,7 +37,6 @@ export default async function obtenerCompleto(req: any, res: any) {
       generales.objetivosDelPrograma,
       generales.fechaInicio,
       generales.fechaFin,
-      generales.totalDeHoras,
       generales.horarioHoraInicio,
       generales.horarioHoraFin,
       reportesParciales,

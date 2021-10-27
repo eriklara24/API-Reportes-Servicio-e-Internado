@@ -26,6 +26,7 @@ export default async function crearReporte(req: any, res: any) {
   let idServicio = 0;
   let actividadesDeUsuario: any[] = [];
   let atencionesRealizadas: any[] = [];
+  let horasRealizadas = 0;
   let servicio: ServicioEInternado;
   let trimestres: Trimestre[] = [];
   let reportes: ReporteParcial[] = [];
@@ -37,6 +38,7 @@ export default async function crearReporte(req: any, res: any) {
     idServicio = req.body.idServicio;
     actividadesDeUsuario = req.body.actividadesUsuario;
     atencionesRealizadas = req.body.atencionesRealizadas;
+    horasRealizadas = req.body.horasRealizadas;
   } catch (err) {
     return res.status(400).send({ code: 'Error: datos enviados no son válidos' });
   }
@@ -80,6 +82,7 @@ export default async function crearReporte(req: any, res: any) {
       idServicio,
       idTrimestre,
       actualizado,
+      horasRealizadas,
       actividadesRealizadas: dummy,
       atencionesRealizadas: dummy2,
     };

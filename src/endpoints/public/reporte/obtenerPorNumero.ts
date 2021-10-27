@@ -13,7 +13,8 @@ import Trimestre from '../../../resources/interfaces/Trimestre';
 export default async function obtenerPorNumero(req: any, res: any) {
   try {
     const { numeroReporte } = req.params;
-    const idUsuario = 1; // Hardcodeado
+    const { idUsuario } = req.params;
+
     // Obtener todos los reportes de este servicio
     const reportesParciales: ReporteParcial[] = await baseDatos.almacenamientoReporteParcial
       .obtenerPorIdUsuario(idUsuario);
@@ -42,6 +43,7 @@ export default async function obtenerPorNumero(req: any, res: any) {
       fechaInicio: trimestre.fechaInicio,
       fechaFin: trimestre.fechaFin,
       actualizado: reportesParciales[numeroReporte - 1].actualizado,
+      horasRealizadas: reportesParciales[numeroReporte - 1].horasRealizadas,
       actividadesRealizadas,
       atencionesRealizadas,
     };
