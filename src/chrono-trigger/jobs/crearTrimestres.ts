@@ -1,6 +1,6 @@
-/* Trabajo Crear Trimestres Dos
+/* Trabajo Crear Trimestres Uno
  * Este trabajo permite crear todos los 4 trimestres que corresponden
- * al periodo de servicio 2, de manera automática cada primero de agosto.
+ * al periodo de servicio 1, de manera automática cada primero de febrero.
  *
  * Escrito por Ramón Paredes Sánchez.
  */
@@ -17,33 +17,33 @@ function obtenerAnio(): number {
 async function crearTrimestres() {
   try {
     const anio = obtenerAnio();
-    const anio2 = anio + 1;
     // Crear trimestre 1
     const trimestreUno: Trimestre = {
       id: 0, // dummy
-      fechaInicio: `${anio}-08-01`,
-      fechaFin: `${anio}-10-31`,
+      fechaInicio: `${anio}-02-01`,
+      fechaFin: `${anio}-04-30`,
     };
     await database.almacenamientoTrimestre.crearTrimestre(trimestreUno);
     // Crear trimestre 2
     const trimestreDos: Trimestre = {
       id: 0, // dummy
-      fechaInicio: `${anio}-11-01`,
-      fechaFin: `${anio2}-01-31`,
+      fechaInicio: `${anio}-05-01`,
+      fechaFin: `${anio}-07-31`,
     };
     await database.almacenamientoTrimestre.crearTrimestre(trimestreDos);
     // Crear trimestre 3
     const trimestreTres: Trimestre = {
       id: 0, // dummy
-      fechaInicio: `${anio2}-02-01`,
-      fechaFin: `${anio2}-04-30`,
+      fechaInicio: `${anio}-08-01`,
+      fechaFin: `${anio}-10-31`,
     };
     await database.almacenamientoTrimestre.crearTrimestre(trimestreTres);
     // Crear trimestre 4
+    const anio2 = anio + 1;
     const trimestreCuatro: Trimestre = {
       id: 0, // dummy
-      fechaInicio: `${anio2}-05-01`,
-      fechaFin: `${anio2}-07-31`,
+      fechaInicio: `${anio}-11-01`,
+      fechaFin: `${anio2}-01-31`,
     };
     await database.almacenamientoTrimestre.crearTrimestre(trimestreCuatro);
   } catch (err) {
@@ -54,7 +54,7 @@ async function crearTrimestres() {
 }
 
 const cronJob: _CronJob = {
-  cron: '* 0 1 8 *', // cualquier minuto de la hora 0, del día 1 del mes 8 de cualquier año
+  cron: '* 0 1 1 *', // cualquier minuto de la hora 0, del día 1 del mes 1 de cualquier año
   job: () => {
     crearTrimestres();
   },

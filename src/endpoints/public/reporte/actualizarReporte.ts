@@ -51,7 +51,7 @@ export default async function actualizarReporte(req: any, res: any) {
 
   // 3.- Actualizar fecha del reporte
   try {
-    const reportes = await baseDatos.almacenamientoReporteParcial.obtenerPorIdUsuario(idUsuario);
+    const reportes = await baseDatos.almacenamientoReporteParcial.obtenerReportesPorIdUsuario(idUsuario);
     if (reportes.length < numeroReporte) {
       return res.status(404).send({ code: 'Error: reporte no creado' });
     }

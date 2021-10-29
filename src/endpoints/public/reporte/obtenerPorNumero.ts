@@ -17,7 +17,7 @@ export default async function obtenerPorNumero(req: any, res: any) {
 
     // Obtener todos los reportes de este servicio
     const reportesParciales: ReporteParcial[] = await baseDatos.almacenamientoReporteParcial
-      .obtenerPorIdUsuario(idUsuario);
+      .obtenerReportesPorIdUsuario(idUsuario);
 
     // Validar que el reporte parcial que se busca exista
     if (reportesParciales.length < numeroReporte || numeroReporte < 1) {

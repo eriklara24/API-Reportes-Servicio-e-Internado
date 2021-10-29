@@ -17,7 +17,7 @@ export default async function obtenerCompleto(req: any, res: any) {
     if (!generales) {
       return res.status(404).send({ code: 'Servicio no encontrado' });
     }
-    const parciales = await baseDatos.almacenamientoReporteParcial.obtenerPorIdUsuario(usuarioId);
+    const parciales = await baseDatos.almacenamientoReporteParcial.obtenerReportesPorIdUsuario(usuarioId);
     const reportesParciales: any[] = [];
     parciales.forEach(async (element) => {
       const trimestre: Trimestre = await baseDatos.almacenamientoTrimestre.obtenerTrimestre(element.idTrimestre);

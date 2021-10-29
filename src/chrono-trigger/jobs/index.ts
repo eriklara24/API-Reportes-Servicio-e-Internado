@@ -1,8 +1,6 @@
-import crearTrimestreUno from './crearTrimestresUno';
-import crearTrimestreDos from './crearTrimestresDos';
+import crearTrimestres from './crearTrimestres';
 
 const jobs = [];
-jobs.push(crearTrimestreUno);
-jobs.push(crearTrimestreDos);
+jobs.push(crearTrimestres);
 
 export default jobs;

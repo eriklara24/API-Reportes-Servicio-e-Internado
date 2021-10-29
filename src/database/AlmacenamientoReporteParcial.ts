@@ -70,7 +70,7 @@ export default class AlmacenamientoReporteParcial {
       return promesaReporteParcial;
     }
 
-    public async obtenerPorIdUsuario(idUsuario: number): Promise<ReporteParcial[]> {
+    public async obtenerReportesPorIdUsuario(idUsuario: number): Promise<ReporteParcial[]> {
       const select = 'SELECT reporte_parcial.* FROM servicio '
       + 'JOIN reporte_parcial ON reporte_parcial.servicio_id = servicio.id '
       + 'WHERE servicio.usuario_id = ?';
@@ -79,8 +79,8 @@ export default class AlmacenamientoReporteParcial {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
-            const datos: ReporteParcial[] = [];
-            resolve(datos);
+            const reportesParciales: ReporteParcial[] = [];
+            resolve(reportesParciales);
           } else {
             const datos: ReporteParcial[] = [];
             for (let i = 0; i < res.length; i += 1) {
@@ -103,7 +103,7 @@ export default class AlmacenamientoReporteParcial {
       return promise;
     }
 
-    public async obtenerPorIdServicio(idServicio: number): Promise<ReporteParcial[]> {
+    public async obtenerReportesPorIdServicio(idServicio: number): Promise<ReporteParcial[]> {
       const select = 'SELECT reporte_parcial.* FROM servicio '
       + 'JOIN reporte_parcial ON reporte_parcial.servicio_id = servicio.id '
       + 'WHERE servicio.id = ?';
@@ -112,10 +112,10 @@ export default class AlmacenamientoReporteParcial {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
-            const datos: ReporteParcial[] = [];
-            resolve(datos);
+            const reportesParciales: ReporteParcial[] = [];
+            resolve(reportesParciales);
           } else {
-            const datos: ReporteParcial[] = [];
+            const reportesParciales: ReporteParcial[] = [];
             for (let i = 0; i < res.length; i += 1) {
               const aux: ReporteParcial = {
                 id: res[i].id,
@@ -126,9 +126,9 @@ export default class AlmacenamientoReporteParcial {
                 actividadesRealizadas: await this.actividad.obtenerPorIdReporte(res[i].id),
                 atencionesRealizadas: await this.atencion.obtenerPorIdReporte(res[i].id),
               };
-              datos.push(aux);
+              reportesParciales.push(aux);
             }
-            resolve(datos);
+            resolve(reportesParciales);
           }
         });
       });
