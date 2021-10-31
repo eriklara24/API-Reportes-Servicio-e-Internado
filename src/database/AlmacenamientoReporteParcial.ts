@@ -24,11 +24,12 @@ export default class AlmacenamientoReporteParcial {
     }
 
     async crearReporteParcial(reporteParcial: ReporteParcial): Promise<ReporteParcial> {
-      const consulta = 'INSERT INTO reporte_parcial(servicio_id, trimestre_id, actualizado) VALUES (?, ?, ?)';
+      const consulta = 'INSERT INTO reporte_parcial(servicio_id, trimestre_id, actualizado, horas_realizadas) VALUES (?, ?, ?, ?)';
       const args = [
         reporteParcial.idServicio,
         reporteParcial.idTrimestre,
         reporteParcial.actualizado,
+        reporteParcial.horasRealizadas,
       ];
       const promesaReporteParcial: any = await new Promise((resolve, reject) => {
         this.conection.query(consulta, args, (err, res) => {
@@ -59,6 +60,7 @@ export default class AlmacenamientoReporteParcial {
               idServicio: res[0].servicio_id,
               idTrimestre: res[0].trimestre_id,
               actualizado: res[0].actualizado,
+              horasRealizadas: res[0].horas_realizadas,
             };
             resolve(reporteParcial);
           }
@@ -68,7 +70,7 @@ export default class AlmacenamientoReporteParcial {
       return promesaReporteParcial;
     }
 
-    public async obtenerPorIdUsuario(idUsuario: number): Promise<ReporteParcial[]> {
+    public async obtenerReportesPorIdUsuario(idUsuario: number): Promise<ReporteParcial[]> {
       const select = 'SELECT reporte_parcial.* FROM servicio '
       + 'JOIN reporte_parcial ON reporte_parcial.servicio_id = servicio.id '
       + 'WHERE servicio.usuario_id = ?';
@@ -77,16 +79,17 @@ export default class AlmacenamientoReporteParcial {
           if (err) {
             reject(err);
           } else if (res.length < 1) {
-            const datos: ReporteParcial[] = [];
-            resolve(datos);
+            const reportesParciales: ReporteParcial[] = [];
+            resolve(reportesParciales);
           } else {
             const datos: ReporteParcial[] = [];
             for (let i = 0; i < res.length; i += 1) {
-              const aux = {
+              const aux: ReporteParcial = {
                 id: res[i].id,
                 idServicio: res[i].servicio_id,
                 idTrimestre: res[i].trimestre_id,
                 actualizado: res[i].actualizado,
+                horasRealizadas: res[i].horas_realizadas,
                 actividadesRealizadas: await this.actividad.obtenerPorIdReporte(res[i].id),
                 atencionesRealizadas: await this.atencion.obtenerPorIdReporte(res[i].id),
               };
@@ -100,12 +103,46 @@ export default class AlmacenamientoReporteParcial {
       return promise;
     }
 
+    public async obtenerReportesPorIdServicio(idServicio: number): Promise<ReporteParcial[]> {
+      const select = 'SELECT reporte_parcial.* FROM servicio '
+      + 'JOIN reporte_parcial ON reporte_parcial.servicio_id = servicio.id '
+      + 'WHERE servicio.id = ?';
+      const promise: any = await new Promise((resolve, reject) => {
+        this.conection.query(select, [idServicio], async (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.length < 1) {
+            const reportesParciales: ReporteParcial[] = [];
+            resolve(reportesParciales);
+          } else {
+            const reportesParciales: ReporteParcial[] = [];
+            for (let i = 0; i < res.length; i += 1) {
+              const aux: ReporteParcial = {
+                id: res[i].id,
+                idServicio: res[i].servicio_id,
+                idTrimestre: res[i].trimestre_id,
+                actualizado: res[i].actualizado,
+                horasRealizadas: res[i].horas_realizadas,
+                actividadesRealizadas: await this.actividad.obtenerPorIdReporte(res[i].id),
+                atencionesRealizadas: await this.atencion.obtenerPorIdReporte(res[i].id),
+              };
+              reportesParciales.push(aux);
+            }
+            resolve(reportesParciales);
+          }
+        });
+      });
+
+      return promise;
+    }
+
     async actualizarReporteParcial(reporteParcial: ReporteParcial): Promise<ReporteParcial> {
-      const consulta = 'UPDATE reporte_parcial SET servicio_id=?, trimestre_id=?, actualizado=? WHERE id=?';
+      const consulta = 'UPDATE reporte_parcial SET servicio_id=?, trimestre_id=?, actualizado=?, horas_realizadas=? WHERE id=?';
       const args = [
         reporteParcial.idServicio,
         reporteParcial.idTrimestre,
         reporteParcial.actualizado,
+        reporteParcial.horasRealizadas,
         String(reporteParcial.id),
       ];
 

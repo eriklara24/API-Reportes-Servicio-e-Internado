@@ -21,11 +21,18 @@ function obtenerFecha(): string {
   return `${anio}-${mes}-${dia}`;
 }
 
+function esFechaPosterior(fecha1: string, fecha2: string) : boolean {
+  const f1 = new Date(fecha1);
+  const f2 = new Date(fecha2);
+  return f1 >= f2;
+}
+
 export default async function crearReporte(req: any, res: any) {
   let idUsuario = 0;
   let idServicio = 0;
   let actividadesDeUsuario: any[] = [];
   let atencionesRealizadas: any[] = [];
+  let horasRealizadas = 0;
   let servicio: ServicioEInternado;
   let trimestres: Trimestre[] = [];
   let reportes: ReporteParcial[] = [];
@@ -37,6 +44,7 @@ export default async function crearReporte(req: any, res: any) {
     idServicio = req.body.idServicio;
     actividadesDeUsuario = req.body.actividadesUsuario;
     atencionesRealizadas = req.body.atencionesRealizadas;
+    horasRealizadas = req.body.horasRealizadas;
   } catch (err) {
     return res.status(400).send({ code: 'Error: datos enviados no son válidos' });
   }
@@ -55,21 +63,25 @@ export default async function crearReporte(req: any, res: any) {
   try {
     trimestres = await baseDatos.almacenamientoTrimestre
       .obtenerPorFechas(servicio.fechaInicio, servicio.fechaFin);
-    if (trimestres.length < 4) {
-      return res.status(500).send({ code: 'Error: trimestres para este servicio no creados.' });
-    }
   } catch (err) {
     return res.status(500).send({ code: 'Error de base de datos' });
   }
 
   // 4.- Obtener los reportes ya creados y crear el nuevo reporte.
   try {
-    reportes = await baseDatos.almacenamientoReporteParcial.obtenerPorIdUsuario(idUsuario);
+    reportes = await baseDatos.almacenamientoReporteParcial.obtenerReportesPorIdUsuario(idUsuario);
     if (reportes.length >= 4) {
       return res.status(404).send({ code: 'Error: todos los reportes ya creados.' });
     }
-    if (req.body.numeroReporte - 1 !== reportes.length) { // el anterior tiene que estar creado
-      return res.status(404).send({ code: 'El reporte anterior no ha sido creado' });
+    if (trimestres.length < reportes.length + 1) { // No existe trimestre para este reporte
+      return res.status(404).send({ code: 'Error: trimestre para este reporte no creado.' });
+    }
+    if (req.body.numeroReporte - 1 !== reportes.length) { // El anterior tiene que estar creado
+      return res.status(404).send({ code: 'Error: El reporte anterior no ha sido creado.' });
+    }
+    // El reporte se debe crear en una fecha igual o posterior al fin de su trimestre
+    if (!esFechaPosterior(obtenerFecha(), trimestres[reportes.length].fechaFin)) {
+      return res.status(404).send({ code: 'Error: La fecha para crear el reporte no ha pasado.' });
     }
     const idTrimestre = trimestres[reportes.length].id;
     const actualizado = obtenerFecha();
@@ -80,6 +92,7 @@ export default async function crearReporte(req: any, res: any) {
       idServicio,
       idTrimestre,
       actualizado,
+      horasRealizadas,
       actividadesRealizadas: dummy,
       atencionesRealizadas: dummy2,
     };

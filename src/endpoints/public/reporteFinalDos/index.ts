@@ -11,6 +11,6 @@ enrutadorReporteFinalDos.use(express.json());
 
 enrutadorReporteFinalDos.post('/', crearReporteFinalDos);
 enrutadorReporteFinalDos.put('/', actualizarReporteFinalDos);
-enrutadorReporteFinalDos.get('/', obtenerReporteFinalDos);
+enrutadorReporteFinalDos.get('/:idUsuario', obtenerReporteFinalDos);
 
 export default enrutadorReporteFinalDos;

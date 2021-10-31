@@ -13,7 +13,6 @@ export default async function actualizarServicio(req: any, res: any) {
         objetivosDelPrograma: req.body.objetivosDelPrograma,
         fechaInicio: req.body.fechaInicio,
         fechaFin: req.body.fechaFin,
-        totalDeHoras: 0,
         horarioHoraInicio: req.body.horarioHoraInicio,
         horarioHoraFin: req.body.horarioHoraFin,
       });

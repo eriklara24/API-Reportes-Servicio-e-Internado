@@ -26,8 +26,8 @@ export default class AlmacenamientoServicioGeneral {
     /** Insertar valores en la tabla servicio de MySQL */
     public async crearServicioGeneral(servicio: ServicioEInternado): Promise<ServicioEInternado> {
       const consulta = 'INSERT INTO servicio(usuario_id, entidad_receptora, receptor, programa,'
-      + 'objetivos_programa, fecha_inicio, fecha_fin, total_horas, horario_hora_inicio, horario_hora_fin)'
-      + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+      + 'objetivos_programa, fecha_inicio, fecha_fin, horario_hora_inicio, horario_hora_fin)'
+      + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
       const args = [
         servicio.idUsuario,
         servicio.entidadReceptora,
@@ -36,7 +36,6 @@ export default class AlmacenamientoServicioGeneral {
         servicio.objetivosDelPrograma,
         servicio.fechaInicio,
         servicio.fechaFin,
-        servicio.totalDeHoras,
         servicio.horarioHoraInicio,
         servicio.horarioHoraFin,
       ];
@@ -54,7 +53,6 @@ export default class AlmacenamientoServicioGeneral {
               objetivosDelPrograma: servicio.objetivosDelPrograma,
               fechaInicio: servicio.fechaInicio,
               fechaFin: servicio.fechaFin,
-              totalDeHoras: servicio.totalDeHoras,
               horarioHoraInicio: servicio.horarioHoraInicio,
               horarioHoraFin: servicio.horarioHoraFin,
             };
@@ -77,7 +75,7 @@ export default class AlmacenamientoServicioGeneral {
           } else if (res.length < 1) {
             reject(new ObjetoNoEncontrado());
           } else {
-            const datosServicio = {
+            const datosServicio: ServicioEInternado = {
               id: res[0].id,
               idUsuario: res[0].usuario_id,
               entidadReceptora: res[0].entidad_receptora,
@@ -86,7 +84,6 @@ export default class AlmacenamientoServicioGeneral {
               objetivosDelPrograma: res[0].objetivos_programa,
               fechaInicio: res[0].fecha_inicio,
               fechaFin: res[0].fecha_fin,
-              totalDeHoras: res[0].total_horas,
               horarioHoraInicio: res[0].horario_hora_inicio,
               horarioHoraFin: res[0].horario_hora_fin,
             };
@@ -108,7 +105,7 @@ export default class AlmacenamientoServicioGeneral {
           } else if (res.length < 1) {
             resolve(false);
           } else {
-            const datos = {
+            const datos: ServicioEInternado = {
               id: res[0].id,
               idUsuario: res[0].usuario_id,
               entidadReceptora: res[0].entidad_receptora,
@@ -117,7 +114,6 @@ export default class AlmacenamientoServicioGeneral {
               objetivosDelPrograma: res[0].objetivos_programa,
               fechaInicio: res[0].fecha_inicio,
               fechaFin: res[0].fecha_fin,
-              totalDeHoras: res[0].total_horas,
               horarioHoraInicio: res[0].horario_hora_inicio,
               horarioHoraFin: res[0].horario_hora_fin,
             };
@@ -132,7 +128,7 @@ export default class AlmacenamientoServicioGeneral {
     /** Actualizar todos los valores de un campo de la tabla servicio de MySQL */
     public async actualizarServicioGeneral(servicio: ServicioEInternado): Promise<ServicioEInternado> {
       const consulta = 'UPDATE servicio SET usuario_id=?, entidad_receptora=?, receptor=?, programa=?,'
-      + 'objetivos_programa=?, fecha_inicio=?, fecha_fin=?, total_horas=?, horario_hora_inicio=?,'
+      + 'objetivos_programa=?, fecha_inicio=?, fecha_fin=?, horario_hora_inicio=?,'
       + 'horario_hora_fin=? WHERE id=?';
       const args = [
         servicio.idUsuario,
@@ -142,7 +138,6 @@ export default class AlmacenamientoServicioGeneral {
         servicio.objetivosDelPrograma,
         servicio.fechaInicio,
         servicio.fechaFin,
-        servicio.totalDeHoras,
         servicio.horarioHoraInicio,
         servicio.horarioHoraFin,
         servicio.id,

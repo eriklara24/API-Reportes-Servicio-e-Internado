@@ -27,6 +27,7 @@ export default async function obtenerPorID(req: any, res: any) {
       idServicio: datosGeneralesReporteParcial.idServicio,
       idTrimestre: datosGeneralesReporteParcial.idTrimestre,
       actualizado: datosGeneralesReporteParcial.actualizado,
+      horasRealizadas: datosGeneralesReporteParcial.horasRealizadas,
       actividadesRealizadas,
       atencionesRealizadas,
     };

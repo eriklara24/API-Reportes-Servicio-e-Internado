@@ -9,6 +9,7 @@ export default interface ReporteParcial {
     idServicio: number;
     idTrimestre: number;
     actualizado: string;
+    horasRealizadas: number;
     actividadesRealizadas: ActividadesRealizadas[];
     atencionesRealizadas: AtencionesRealizadas[];
 }

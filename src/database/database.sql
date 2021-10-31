@@ -22,7 +22,7 @@ USE `Servicio_Medicina` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Servicio_Medicina`.`usuario` (
   `id` BIGINT(8) NOT NULL,
-  `rol` ENUM('prestador', 'interno', 'revisor', 'administrador') NOT NULL,
+  `rol` ENUM('prestador', 'interno', 'revisor', 'administrador'),
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC))
 ENGINE = InnoDB;
@@ -34,15 +34,14 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `Servicio_Medicina`.`servicio` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `usuario_id` BIGINT(8) NOT NULL,
-  `entidad_receptora` VARCHAR(100) NOT NULL,
-  `receptor` VARCHAR(100) NOT NULL,
+  `entidad_receptora` VARCHAR(100),
+  `receptor` VARCHAR(100),
   `programa` VARCHAR(100) NULL,
   `objetivos_programa` VARCHAR(100) NULL,
-  `fecha_inicio` DATE NOT NULL,
-  `fecha_fin` DATE NOT NULL,
-  `total_horas` INT NOT NULL,
-  `horario_hora_inicio` TIME NOT NULL,
-  `horario_hora_fin` TIME NOT NULL,
+  `fecha_inicio` DATE,
+  `fecha_fin` DATE,
+  `horario_hora_inicio` TIME,
+  `horario_hora_fin` TIME,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   INDEX `fk_servicio_usuario_idx` (`usuario_id` ASC),
@@ -72,7 +71,8 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `Servicio_Medicina`.`reporte_parcial` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `servicio_id` INT NOT NULL,
-  `actualizado` DATE NOT NULL,
+  `actualizado` DATE,
+  `horas_realizadas` INT,
   `trimestre_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
@@ -96,7 +96,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Servicio_Medicina`.`actividad_de_usuario` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `descripcion` TEXT NOT NULL,
+  `descripcion` TEXT,
   `servicio_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
@@ -114,7 +114,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Servicio_Medicina`.`actividad_realizada` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `cantidad` INT NOT NULL,
+  `cantidad` INT,
   `actividad_de_usuario_id` INT NOT NULL,
   `reporte_parcial_id` INT NOT NULL,
   PRIMARY KEY (`id`),
@@ -139,8 +139,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Servicio_Medicina`.`atencion_realizada` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `tipo` INT NOT NULL,
-  `cantidad` INT NOT NULL,
+  `tipo` INT,
+  `cantidad` INT,
   `usuario_id` BIGINT(8) NOT NULL,
   `reporte_parcial_id` INT NOT NULL,
   PRIMARY KEY (`id`),
@@ -166,11 +166,11 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `Servicio_Medicina`.`reporte_final` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `servicio_id` INT NOT NULL,
-  `metas_alcanzadas` TEXT NOT NULL,
-  `metodologia` TEXT NOT NULL,
-  `innovacion` TEXT NOT NULL,
-  `conclusion` TEXT NOT NULL,
-  `propuestas` TEXT NOT NULL,
+  `metas_alcanzadas` TEXT,
+  `metodologia` TEXT,
+  `innovacion` TEXT,
+  `conclusion` TEXT,
+  `propuestas` TEXT,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   INDEX `fk_reporte_final_servicio1_idx` (`servicio_id` ASC),
