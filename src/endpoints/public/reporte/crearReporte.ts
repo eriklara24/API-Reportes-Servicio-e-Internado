@@ -98,22 +98,23 @@ export default async function crearReporte(req: any, res: any) {
     };
     nuevoReporte = await baseDatos.almacenamientoReporteParcial.crearReporteParcial(nuevoReporte);
   } catch (err) {
-    return res.status(500).send({ code: 'Error de base de datos' });
+    return res.status(500).send(err);
   }
 
   // 5.- Guardar las atenciones con los datos del servicio y el nuevo reporte.
   try {
     const idNuevoReporte = nuevoReporte.id;
     for (let i = 0; i < atencionesRealizadas.length; i += 1) {
-      const nuevaAtencion: AtencionesRealizadas = {
+      let nuevaAtencion: AtencionesRealizadas = {
         id: 0,
         idReporteParcial: idNuevoReporte,
         idUsuario,
         tipo: i,
         cantidad: atencionesRealizadas[i].cantidad,
       };
-      await baseDatos.almacenamientoAtencionRealizada
+      nuevaAtencion = await baseDatos.almacenamientoAtencionRealizada
         .crearAtencionRealizada(nuevaAtencion); // Se almacena por cuestión de la promesa, aunque no se vuelve a usuar.
+      nuevoReporte.atencionesRealizadas.push(nuevaAtencion);
     }
   } catch (err) {
     return res.status(500).send({ code: 'Error de base de datos' });
@@ -143,9 +144,10 @@ export default async function crearReporte(req: any, res: any) {
       };
       nuevaRealizada = await baseDatos.almacenamientoActividadRealizada
         .crearActividadRealizada(nuevaRealizada);
+      nuevoReporte.actividadesRealizadas.push(nuevaRealizada);
     }
   } catch (err) {
     return res.status(500).send({ code: 'Error de base de datos' });
   }
-  return res.status(201).send({ code: 'Reporte creado con éxito' });
+  return res.status(201).send({ reporte: nuevoReporte });
 }
