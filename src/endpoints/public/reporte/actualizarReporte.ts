@@ -33,6 +33,7 @@ export default async function actualizarReporte(req: any, res: any) {
     atencionesRealizadas = req.body.atencionesRealizadas;
     horasRealizadas = req.body.horasRealizadas;
     numeroReporte = req.params.numeroReporte;
+
     if (numeroReporte < 1 || numeroReporte > 4) {
       return res.status(404).send({ code: 'Error: número de reporte no válido' });
     }
@@ -92,15 +93,16 @@ export default async function actualizarReporte(req: any, res: any) {
   try {
     const idNuevoReporte = nuevoReporte.id;
     for (let i = 0; i < atencionesRealizadas.length; i += 1) {
-      const nuevaAtencion: AtencionesRealizadas = {
+      let nuevaAtencion: AtencionesRealizadas = {
         id: 0,
         idReporteParcial: idNuevoReporte,
         idUsuario,
         tipo: i,
         cantidad: atencionesRealizadas[i].cantidad,
       };
-      await baseDatos.almacenamientoAtencionRealizada
+      nuevaAtencion = await baseDatos.almacenamientoAtencionRealizada
         .crearAtencionRealizada(nuevaAtencion); // Se almacena por cuestión de la promesa, aunque no se vuelve a usuar.
+      nuevoReporte.atencionesRealizadas.push(nuevaAtencion);
     }
   } catch (err) {
     return res.status(500).send({ code: 'Error de base de datos' });
@@ -127,11 +129,13 @@ export default async function actualizarReporte(req: any, res: any) {
         idReporteParcial: nuevoReporte.id,
         cantidad: actividadesDeUsuario[i].cantidad,
       };
+
       nuevaRealizada = await baseDatos.almacenamientoActividadRealizada
         .crearActividadRealizada(nuevaRealizada);
+      nuevoReporte.actividadesRealizadas.push(nuevaRealizada);
     }
   } catch (err) {
     return res.status(500).send({ code: 'Error de base de datos' });
   }
-  return res.status(201).send({ code: 'Reporte actualizado con éxito' });
+  return res.status(201).send({ reporte: nuevoReporte });
 }
