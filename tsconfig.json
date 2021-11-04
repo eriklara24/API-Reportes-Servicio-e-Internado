@@ -10,7 +10,7 @@
     },
     "include": [
         "src/**/*.ts", 
-        "App.ts"    
+        "API.ts"    
 , "src/database/errors"    ],
     "exclude": [
         "node_modules"

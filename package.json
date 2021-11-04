@@ -2,11 +2,12 @@
   "name": "medicine-service-app",
   "version": "0.0.1",
   "description": "App for social service registration on healt science careers.",
-  "main": "App.ts",
+  "main": "API.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
-    "start-dev": "ts-node-dev --respawn ./App.ts"
+    "start-dev": "ts-node-dev --respawn ./API.ts",
+    "linter": "eslint --ext .ts src/** configuration.json API.ts"
   },
   "repository": {
     "type": "git",
@@ -16,7 +17,8 @@
     "Medicine",
     "Social",
     "Service",
-    "App"
+    "App",
+    "API"
   ],
   "author": "Ramón Paredes Sánchez, Kevin Josué Olmeda de Rueda",
   "license": "ISC",
@@ -25,6 +27,7 @@
   },
   "homepage": "https://github.com/eriklara24/ServiceMedicine#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-plugin-import": "^2.23.4",
@@ -32,6 +35,7 @@
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "node-schedule": "^2.0.0",
     "typescript": "^4.3.2"

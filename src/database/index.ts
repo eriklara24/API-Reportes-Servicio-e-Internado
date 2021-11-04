@@ -1,5 +1,4 @@
 /* eslint-disable linebreak-style */
-import config = require('../../configuration.json');
 import AlmacenamientoUsuario from './AlmacenamientoUsuario';
 import AlmacenamientoTrimestre from './AlmacenamientoTrimestre';
 import AlmacenamientoReporteParcial from './AlmacenamientoReporteParcial';
@@ -8,6 +7,7 @@ import AlmacenamientoActividadDeUsuario from './AlmacenamientoActividadDeUsuario
 import AlmacenamientoActividadRealizada from './AlmacenamientoActividadRealizada';
 import AlmacenamientoAtencionRealizada from './AlmacenamientoAtencionRealizada';
 import AlmacenamientoServicioGeneral from './AlmacenamientoServicioGeneral';
+import config from '../../configuracion';
 
 class Database {
   almacenamientoUsuario: AlmacenamientoUsuario;

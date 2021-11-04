@@ -15,10 +15,16 @@ export default class AlmacenamientoUsuario {
     }
 
     async crearUsuario(usuario: Usuario): Promise<Usuario> {
-      const consulta = 'INSERT INTO usuario(id, rol) VALUES (?, ?)';
+      const consulta = 'INSERT INTO usuario(rol, nombreUsuario, contrasena, preguntaSeguridadUno, preguntaSeguridadDos, nombre, carrera, codigo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
       const args = [
-        String(usuario.getId()),
-        usuario.getRol(),
+        usuario.rol,
+        usuario.nombreUsuario,
+        usuario.contrasena,
+        usuario.preguntaSeguridadUno,
+        usuario.preguntaSeguridadDos,
+        usuario.nombre,
+        usuario.carrera,
+        usuario.codigo,
       ];
       const promesaUsuario: any = await new Promise((resolve, reject) => {
         this.conection.query(consulta, args, (err) => {
@@ -42,7 +48,41 @@ export default class AlmacenamientoUsuario {
           } else if (res.length < 1) {
             reject(new ObjetoNoEncontrado());
           } else {
-            const usuario = new Usuario(res[0].id, res[0].rol);
+            const usuario = {
+              id: res[0].id,
+              rol: res[0].rol,
+              nombreUsuario: res[0].nombreUsuario,
+              contrasena: res[0].contrasena,
+              preguntaSeguridadUno: res[0].preguntaSeguridadUno,
+              preguntaSeguridadDos: res[0].preguntaSeguridadDos,
+            };
+
+            resolve(usuario);
+          }
+        });
+      });
+
+      return promesaUsuario;
+    }
+
+    async obtenerUsuarioPorNombreUsuario(nombreUsuario: number): Promise<Usuario> {
+      const consulta = 'SELECT * FROM usuario WHERE nombreUsuario=?';
+      const promesaUsuario: any = await new Promise((resolve, reject) => {
+        this.conection.query(consulta, [String(nombreUsuario)], (err, res) => {
+          if (err) {
+            reject(err);
+          } else if (res.length < 1) {
+            reject(new ObjetoNoEncontrado());
+          } else {
+            const usuario = {
+              id: res[0].id,
+              rol: res[0].rol,
+              nombreUsuario: res[0].nombreUsuario,
+              contrasena: res[0].contrasena,
+              preguntaSeguridadUno: res[0].preguntaSeguridadUno,
+              preguntaSeguridadDos: res[0].preguntaSeguridadDos,
+            };
+
             resolve(usuario);
           }
         });
@@ -52,11 +92,13 @@ export default class AlmacenamientoUsuario {
     }
 
     async actualizarUsuario(usuario: Usuario): Promise<Usuario> {
-      const consulta = 'UPDATE usuario SET id=?, rol=? WHERE id=?';
+      const consulta = 'UPDATE usuario SET contrasena=?, nombre=?, carrera=?, codigo=? WHERE id=?';
       const args = [
-        String(usuario.getId()),
-        usuario.getRol(),
-        String(usuario.getId()),
+        usuario.contrasena,
+        usuario.nombre,
+        usuario.carrera,
+        usuario.codigo,
+        usuario.id,
       ];
       const promesaUsuario: any = await new Promise((resolve, reject) => {
         this.conection.query(consulta, args, (err, res) => {

@@ -28,21 +28,21 @@ export default async function obtenerCompleto(req: any, res: any) {
     });
     const final = await baseDatos.almacenamientoReporteFinalDos.obtenerPorIdUsuario(usuarioId);
     const actividades = await baseDatos.almacenamientoActividadDeUsuario.obtenerPorIdUsuario(usuarioId);
-    const servicio = new Servicio(
-      generales.id,
-      generales.idUsuario,
-      generales.entidadReceptora,
-      generales.receptor,
-      generales.programa,
-      generales.objetivosDelPrograma,
-      generales.fechaInicio,
-      generales.fechaFin,
-      generales.horarioHoraInicio,
-      generales.horarioHoraFin,
+    const servicio : Servicio = {
+      id: generales.id,
+      idUsuario: generales.idUsuario,
+      entidadReceptora: generales.entidadReceptora,
+      receptor: generales.receptor,
+      programa: generales.programa,
+      objetivosDelPrograma: generales.objetivosDelPrograma,
+      fechaInicio: generales.fechaInicio,
+      fechaFin: generales.fechaFin,
+      horarioHoraInicio: generales.horarioHoraInicio,
+      horarioHoraFin: generales.horarioHoraFin,
       reportesParciales,
-      final,
-      actividades,
-    );
+      reporteFinalDos: final,
+      actividadesDeUsuario: actividades,
+    };
     return res.status(200).send(servicio);
   } catch (err) {
     return res.status(500).send({ code: 'Error de base de datos' });
