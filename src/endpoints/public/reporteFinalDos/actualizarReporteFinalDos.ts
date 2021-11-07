@@ -2,11 +2,12 @@
 import baseDatos from '../../../database';
 
 export default async function actualizarReporteFinalDos(req: any, res: any) {
+  const { usuario } = req;
   try {
     const reporteFinalDosActualizado = await baseDatos
       .almacenamientoReporteFinalDos.actualizarReporteFinalDos({
         id: req.body.id,
-        idServicio: req.body.idServicio,
+        idServicio: usuario.idServicio,
         metasAlcanzadas: req.body.metasAlcanzadas,
         metodologiaUtilizada: req.body.metodologiaUtilizada,
         innovacionAportada: req.body.innovacionAportada,
