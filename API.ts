@@ -4,8 +4,13 @@ import ChronoTrigger from './src/chrono-trigger';
 import publicRouter from './src/endpoints/public';
 
 const express = require('express');
+const cors = require('cors');
 
 const APIServer = express();
+
+if (config.ambiente === 'develop') {
+  APIServer.use(cors({ 'Access-Control-Allow-Origin': '*' }));
+}
 
 APIServer.use('/public', publicRouter);
 

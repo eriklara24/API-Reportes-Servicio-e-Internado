@@ -1,4 +1,5 @@
 const config = {
+  ambiente: process.env.AMBIENTE || 'develop',
   host: 'localhost',
   port: 9000,
   database: {
