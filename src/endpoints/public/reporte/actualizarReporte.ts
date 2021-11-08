@@ -17,6 +17,7 @@ function obtenerFecha(): string {
 }
 
 export default async function actualizarReporte(req: any, res: any) {
+  const { usuario } = req;
   let idUsuario = 0;
   let idServicio = 0;
   let actividadesDeUsuario: any[] = [];
@@ -27,8 +28,8 @@ export default async function actualizarReporte(req: any, res: any) {
 
   // 1.- Obtener los datos del body
   try {
-    idUsuario = req.body.idUsuario;
-    idServicio = req.body.idServicio;
+    idUsuario = usuario.id;
+    idServicio = usuario.idServicio;
     actividadesDeUsuario = req.body.actividadesUsuario;
     atencionesRealizadas = req.body.atencionesRealizadas;
     horasRealizadas = req.body.horasRealizadas;

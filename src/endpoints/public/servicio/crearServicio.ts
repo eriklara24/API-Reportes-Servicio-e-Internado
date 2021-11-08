@@ -2,11 +2,12 @@
 import baseDatos from '../../../database';
 
 export default async function crearServicio(req: any, res: any) {
+  const { usuario } = req;
   try {
-    if (!await baseDatos.almacenamientoServicioGeneral.obtenerPorIdUsuario(req.body.idUsuario)) {
+    if (!await baseDatos.almacenamientoServicioGeneral.obtenerPorIdUsuario(usuario.id)) {
       const nuevoServicio = await baseDatos.almacenamientoServicioGeneral.crearServicioGeneral({
         id: 0,
-        idUsuario: req.body.idUsuario,
+        idUsuario: usuario.id,
         entidadReceptora: req.body.entidadReceptora,
         receptor: req.body.receptor,
         programa: req.body.programa,

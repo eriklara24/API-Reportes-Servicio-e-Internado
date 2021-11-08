@@ -1,10 +1,10 @@
 const config = {
   ambiente: process.env.AMBIENTE || 'develop',
   host: 'localhost',
-  port: 9000,
+  port: 3000,
   database: {
     user: 'root',
-    password: 'dolphR0ot',
+    password: '12345678',
     name: 'Servicio_Medicina',
   },
   autenticacion: {

@@ -34,7 +34,7 @@ export default async function crearUsuario(req: any, res: any) {
     return res.status(201).send(nuevoUsuario);
   } catch (err) {
     if (err.errno === 1062) {
-      return res.status(400).send({ codigo: 'USUARIO_YA_EXISTE' });
+      return res.status(400).send(err);
     }
 
     return res.status(500).send({ codigo: 'ERROR_INESPERADO' });
