@@ -28,6 +28,7 @@ function esFechaPosterior(fecha1: string, fecha2: string) : boolean {
 }
 
 export default async function crearReporte(req: any, res: any) {
+  const { usuario } = req;
   let idUsuario = 0;
   let idServicio = 0;
   let actividadesDeUsuario: any[] = [];
@@ -40,8 +41,8 @@ export default async function crearReporte(req: any, res: any) {
 
   // 1.- Obtener los datos del body
   try {
-    idUsuario = req.body.idUsuario;
-    idServicio = req.body.idServicio;
+    idUsuario = usuario.id;
+    idServicio = usuario.idServicio;
     actividadesDeUsuario = req.body.actividadesUsuario;
     atencionesRealizadas = req.body.atencionesRealizadas;
     horasRealizadas = req.body.horasRealizadas;
@@ -101,7 +102,7 @@ export default async function crearReporte(req: any, res: any) {
     return res.status(500).send(err);
   }
 
-  // 5.- Guardar las atenciones con los datos del servicio y el nuevo reporte.
+  // // 5.- Guardar las atenciones con los datos del servicio y el nuevo reporte.
   try {
     const idNuevoReporte = nuevoReporte.id;
     for (let i = 0; i < atencionesRealizadas.length; i += 1) {
@@ -120,7 +121,7 @@ export default async function crearReporte(req: any, res: any) {
     return res.status(500).send({ code: 'Error de base de datos' });
   }
 
-  // 6.- Guardar actividades de usuario y actividades realizadas con los datos en variables.
+  // // 6.- Guardar actividades de usuario y actividades realizadas con los datos en variables.
   try {
     for (let i = 0; i < actividadesDeUsuario.length; i += 1) {
       let idActividadDeUsuario = 0;

@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `Servicio_Medicina`.`usuario` (
   `preguntaSeguridadUno` VARCHAR(100) NOT NULL,
   `preguntaSeguridadDos` VARCHAR(100) NOT NULL,
   `nombre` VARCHAR(100) NOT NULL,
-  `carrera` VARCHAR(150) NOT NULL UNIQUE,
+  `carrera` VARCHAR(150) NOT NULL,
   `codigo` BIGINT(8) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC))
