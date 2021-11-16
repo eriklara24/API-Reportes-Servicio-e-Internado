@@ -80,20 +80,11 @@ export default async function actualizarReporte(req: any, res: any) {
 
   // 4.- Eliminar actividades realizadas y atenciones realizadas anteriores
   try {
-    const auxActividadesRealizadas = await baseDatos.almacenamientoActividadRealizada
-      .obtenerPorIDReporte(nuevoReporte.id);
-    const auxAtencionesRealizadas = await baseDatos.almacenamientoAtencionRealizada
-      .obtenerPorIdReporte(nuevoReporte.id);
-    for (let i = 0; i < auxActividadesRealizadas.length; i += 1) {
-      await baseDatos.almacenamientoActividadRealizada // dummy se necesita para la promesa
-        .eliminarActividadRealizada(auxActividadesRealizadas[i].id);
-    }
-    for (let i = 0; i < auxAtencionesRealizadas.length; i += 1) {
-      await baseDatos.almacenamientoAtencionRealizada // dummy se necesita para la promesa
-        .eliminarAtencionRealizada(auxAtencionesRealizadas[i].id);
-    }
+    await baseDatos.almacenamientoActividadRealizada.eliminarActividadesDeReporte(nuevoReporte.id);
+    await baseDatos.almacenamientoAtencionRealizada.eliminarAtencionesDeReporte(nuevoReporte.id);
   } catch (err) {
-    return res.status(500).send({ code: 'ERROR_AL_ACTUALIZAR_ACTIVIDADES_Y_ATENCIONES' });
+    console.log(err);
+    return res.status(500).send({ code: 'ERROR_AL_ELIMINAR_ACTIVIDADES_Y_ATENCIONES' });
   }
 
   // 5.- Insertar nuevas atenciones realizadas y nuevas actividades realizadas

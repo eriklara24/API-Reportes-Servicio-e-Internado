@@ -209,4 +209,20 @@ export default class AlmacenamientoAtencionRealizada {
 
       return promesaAtencionRealizada;
     }
+
+    async eliminarAtencionesDeReporte(idReporte: number): Promise<boolean> {
+      const consulta = 'DELETE FROM atencion_realizada WHERE reporte_parcial_id=?';
+      const args = [idReporte];
+      const deleteInfo: any = await new Promise((resolve, reject) => {
+        this.conexion.query(consulta, args, (err) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(true);
+          }
+        });
+      });
+
+      return deleteInfo;
+    }
 }

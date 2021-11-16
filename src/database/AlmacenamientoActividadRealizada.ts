@@ -208,7 +208,7 @@ export default class AlmacenamientoActividadRealizada {
       return selectInfo;
     }
 
-    async obtenerPorIdReporteParcial(idReporteParcial: number) {
+    public async obtenerPorIdReporteParcial(idReporteParcial: number) {
       const consulta = 'SELECT * FROM actividad_realizada WHERE reporte_parcial_id = ?';
       const args = [idReporteParcial];
       const promesaActividadRealizada: any = await new Promise((resolve, reject) => {
@@ -233,5 +233,21 @@ export default class AlmacenamientoActividadRealizada {
       });
 
       return promesaActividadRealizada;
+    }
+
+    public async eliminarActividadesDeReporte(idReporte: number): Promise<boolean> {
+      const consulta = 'DELETE FROM actividad_realizada WHERE reporte_parcial_id=?';
+      const args = [idReporte];
+      const deleteInfo: any = await new Promise((resolve, reject) => {
+        this.conexion.query(consulta, args, (err) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(true);
+          }
+        });
+      });
+
+      return deleteInfo;
     }
 }
