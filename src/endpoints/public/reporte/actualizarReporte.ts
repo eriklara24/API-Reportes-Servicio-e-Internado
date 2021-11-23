@@ -83,7 +83,6 @@ export default async function actualizarReporte(req: any, res: any) {
     await baseDatos.almacenamientoActividadRealizada.eliminarActividadesDeReporte(nuevoReporte.id);
     await baseDatos.almacenamientoAtencionRealizada.eliminarAtencionesDeReporte(nuevoReporte.id);
   } catch (err) {
-    console.log(err);
     return res.status(500).send({ code: 'ERROR_AL_ELIMINAR_ACTIVIDADES_Y_ATENCIONES' });
   }
 

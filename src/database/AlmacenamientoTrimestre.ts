@@ -87,43 +87,4 @@ export default class AlmacenamientoTrimestre {
 
       return promise;
     }
-
-    async actualizarTrimestre(trimestre: Trimestre): Promise<Trimestre> {
-      const consulta = 'UPDATE trimestre SET fecha_inicio=?, fecha_fin=? WHERE id=?';
-      const args = [
-        trimestre.fechaInicio,
-        trimestre.fechaFin,
-        String(trimestre.id),
-      ];
-      const promesaTrimestre: any = await new Promise((resolve, reject) => {
-        this.conection.query(consulta, args, (err, res) => {
-          if (err) {
-            reject(err);
-          } else if (res.affectedRows < 1) {
-            reject(new ObjetoNoEncontrado());
-          } else {
-            resolve(trimestre);
-          }
-        });
-      });
-
-      return promesaTrimestre;
-    }
-
-    async eliminarTrimestre(id: number): Promise<boolean> {
-      const consulta = 'DELETE FROM trimestre WHERE id=?';
-      const promesaTrimestre: any = await new Promise((resolve, reject) => {
-        this.conection.query(consulta, [String(id)], (err, res) => {
-          if (err) {
-            reject(err);
-          } else if (res.affectedRows < 1) {
-            reject(new ObjetoNoEncontrado());
-          } else {
-            resolve(true);
-          }
-        });
-      });
-
-      return promesaTrimestre;
-    }
 }

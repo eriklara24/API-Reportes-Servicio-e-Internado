@@ -46,30 +46,6 @@ export default class AlmacenamientoReporteParcial {
       return promesaReporteParcial;
     }
 
-    async obtenerReporteParcial(id: number): Promise<ReporteParcial> {
-      const consulta = 'SELECT * FROM reporte_parcial WHERE id=?';
-      const promesaReporteParcial: any = await new Promise((resolve, reject) => {
-        this.conection.query(consulta, [String(id)], (err, res) => {
-          if (err) {
-            reject(err);
-          } else if (res.length < 1) {
-            reject(new ObjetoNoEncontrado());
-          } else {
-            const reporteParcial = {
-              id: res[0].id,
-              idServicio: res[0].servicio_id,
-              idTrimestre: res[0].trimestre_id,
-              actualizado: res[0].actualizado,
-              horasRealizadas: res[0].horas_realizadas,
-            };
-            resolve(reporteParcial);
-          }
-        });
-      });
-
-      return promesaReporteParcial;
-    }
-
     public async obtenerReportesPorIdUsuario(idUsuario: number): Promise<ReporteParcial[]> {
       const select = 'SELECT reporte_parcial.* FROM servicio '
       + 'JOIN reporte_parcial ON reporte_parcial.servicio_id = servicio.id '
@@ -154,23 +130,6 @@ export default class AlmacenamientoReporteParcial {
             reject(new ObjetoNoEncontrado());
           } else {
             resolve(reporteParcial);
-          }
-        });
-      });
-
-      return promesaReporteParcial;
-    }
-
-    async eliminarReporteParcial(id: number): Promise<boolean> {
-      const consulta = 'DELETE FROM reporte_parcial WHERE id=?';
-      const promesaReporteParcial: any = await new Promise((resolve, reject) => {
-        this.conection.query(consulta, [String(id)], (err, res) => {
-          if (err) {
-            reject(err);
-          } else if (res.affectedRows < 1) {
-            reject(new ObjetoNoEncontrado());
-          } else {
-            resolve(true);
           }
         });
       });

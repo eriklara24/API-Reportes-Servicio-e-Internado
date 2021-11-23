@@ -11,6 +11,9 @@ const config = {
     algoritmo: process.env.ALGORITMO_AUTENTICACION || 'HS256',
     semilla: process.env.SEMILLA_AUTENTICACION || 'semillapruebaJKnas490nflz7y1g083gfdjlfuq49yfvmnp934yraiesjfn1lo4780efhdsafkjdq24t0eg',
   },
+  SIIAUKey: process.env.SIIAU_LOGIN_KEY || '',
+  SIIAUHost: 'http://ms.mw.siiau.udg.mx:80',
+  SIIAUPath: '/WSValidaUsuarios/ValidaUsuarios',
 };
 
 export default config;

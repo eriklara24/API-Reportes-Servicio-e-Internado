@@ -1,32 +1,33 @@
 {
-  "name": "medicine-service-app",
-  "version": "0.0.1",
-  "description": "App for social service registration on healt science careers.",
+  "name": "api-reportes-servicio-e-internado",
+  "version": "1.0.0",
+  "description": "API para el registro de reportes de servicio social para las carreras de ciencias de la salud.",
   "main": "API.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
     "start-dev": "ts-node-dev --respawn ./API.ts",
-    "linter": "eslint --ext .ts src/** configuration.json API.ts"
+    "linter": "eslint --ext .ts src/** API.ts"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/eriklara24/ServiceMedicine.git"
+    "url": "https://github.com/eriklara24/API-Reportes-Servicio-e-Internado"
   },
   "keywords": [
-    "Medicine",
+    "Medicina",
     "Social",
-    "Service",
+    "Servicio",
     "App",
     "API"
   ],
-  "author": "Ramón Paredes Sánchez, Kevin Josué Olmeda de Rueda",
+  "author": "Ramón Paredes Sánchez, Kevin Josué Olmeda de Rueda, Erik Raul Aguirre Lara",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/eriklara24/ServiceMedicine/issues"
+    "url": "https://github.com/eriklara24/API-Reportes-Servicio-e-Internado/issues"
   },
-  "homepage": "https://github.com/eriklara24/ServiceMedicine#readme",
+  "homepage": "https://github.com/eriklara24/API-Reportes-Servicio-e-Internado#readme",
   "dependencies": {
+    "axios": "^0.24.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "eslint-config-airbnb": "^18.2.1",
@@ -38,7 +39,8 @@
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "node-schedule": "^2.0.0",
-    "typescript": "^4.3.2"
+    "typescript": "^4.3.2",
+    "xml2js": "^0.4.23"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.0",
