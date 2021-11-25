@@ -6,7 +6,6 @@ interface Usuario {
   rol: Roles;
   nombre: string
   carrera: string
-  codigo: number
 }
 
 export default Usuario;

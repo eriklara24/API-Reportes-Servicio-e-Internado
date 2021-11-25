@@ -10,7 +10,7 @@ export default async function (req: any, res: any) {
     body,
   } = req;
 
-  const { codigo, contrasena } = body;
+  const { codigo, nip } = body;
 
   let usuario: Usuario;
   let servicio: DatosGeneralesServicio;
@@ -18,7 +18,7 @@ export default async function (req: any, res: any) {
   let datosSiiau: any = {};
 
   try {
-    datosSiiau = await validarSiiau(codigo, contrasena);
+    datosSiiau = await validarSiiau(codigo, nip);
     if (datosSiiau.length === 1 && datosSiiau[0] === '0') {
       errorData.code = 'USUARIO_NO_ENCONTRADO_EN_SIIAU';
       errorData.status = 404;
@@ -39,7 +39,6 @@ export default async function (req: any, res: any) {
         rol: 'prestador',
         nombre: datosSiiau[2],
         carrera: datosSiiau[4],
-        codigo,
       };
       usuario = await baseDatos.almacenamientoUsuario.crearUsuario(datosUsuario);
       idServicio = 0;
@@ -50,6 +49,11 @@ export default async function (req: any, res: any) {
     const token = autenticacion.crearToken(usuario, idServicio);
     return res.status(201).send({ token });
   } catch (err) {
+    if (err.errno === 1048) {
+      errorData.code = 'USUARIO_NO_ENCONTRADO_EN_SIIAU';
+      errorData.status = 500;
+    }
+
     errorData.code = 'ERROR_DE_BASE_DE_DATOS';
     errorData.status = 500;
     return res.status(errorData.status).send({ code: errorData.code });

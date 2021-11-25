@@ -28,7 +28,6 @@ class Autenticacion {
         rol: usuario.rol,
         nombre: usuario.nombre,
         carrera: usuario.carrera,
-        codigo: usuario.codigo,
       },
       exp: this.calcularTiempoExpiracion(),
     };

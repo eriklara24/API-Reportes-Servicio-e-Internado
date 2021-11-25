@@ -10,7 +10,7 @@ const enrutadorUsuario = express.Router();
 
 enrutadorUsuario.use(express.json());
 
-enrutadorUsuario.get('/', autenticacion.jwtAutenticacion(['interno', 'prestador']), obtenerUsuario);
+enrutadorUsuario.get('/', obtenerUsuario);
 enrutadorUsuario.post('/iniciar-sesion', iniciarSesion);
 enrutadorUsuario.get('/actividades', autenticacion.jwtAutenticacion(['interno', 'prestador']), obtenerActividadesUsuario);
 

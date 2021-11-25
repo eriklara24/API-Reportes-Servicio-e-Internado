@@ -47,7 +47,6 @@ export default class AlmacenamientoUsuario {
               rol: res[0].rol,
               nombre: '',
               carrera: '',
-              codigo: 0,
             };
 
             resolve(usuario);
