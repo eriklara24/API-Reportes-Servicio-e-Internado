@@ -17,15 +17,8 @@ USE `Servicio_Medicina` ;
 -- Table `Servicio_Medicina`.`usuario`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Servicio_Medicina`.`usuario` (
-  `id` BIGINT(8) NOT NULL AUTO_INCREMENT,
-  `nombreUsuario` VARCHAR(100) NOT NULL UNIQUE,
-  `contrasena` VARCHAR(100) NOT NULL,
+  `id` BIGINT(8) NOT NULL,
   `rol` ENUM('prestador', 'interno', 'revisor', 'administrador'),
-  `preguntaSeguridadUno` VARCHAR(100) NOT NULL,
-  `preguntaSeguridadDos` VARCHAR(100) NOT NULL,
-  `nombre` VARCHAR(100) NOT NULL,
-  `carrera` VARCHAR(150) NOT NULL,
-  `codigo` BIGINT(8) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC))
 ENGINE = InnoDB;

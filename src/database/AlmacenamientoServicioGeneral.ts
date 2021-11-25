@@ -158,23 +158,4 @@ export default class AlmacenamientoServicioGeneral {
 
       return updateInfo;
     }
-
-    /** Eliminar todos los valores de un campo de la tabla servicio de MySQL */
-    public async eliminarServicioGeneral(id: number): Promise<boolean> {
-      const consulta = 'DELETE FROM servicio WHERE id=?';
-      const args = [id];
-      const deleteInfo: any = await new Promise((resolve, reject) => {
-        this.conexion.query(consulta, args, (err, res) => {
-          if (err) {
-            reject(err);
-          } else if (res.affectedRows < 1) {
-            reject(new ObjetoNoEncontrado());
-          } else {
-            resolve(true);
-          }
-        });
-      });
-
-      return deleteInfo;
-    }
 }

@@ -2,38 +2,56 @@ import Usuario from '../../../resources/models/Usuario';
 import baseDatos from '../../../database';
 import autenticacion from '../../../autenticacion';
 import DatosGeneralesServicio from '../../../resources/models/DatosGeneralesServicio';
+import validarSiiau from './validarSiiau';
+import ObjetoNoEncontrado from '../../../database/errors/ObjetoNoEncontrado';
 
 export default async function (req: any, res: any) {
   const {
     body,
   } = req;
 
-  const { nombreUsuario, contrasena } = body;
+  const { codigo, contrasena } = body;
 
   let usuario: Usuario;
   let servicio: DatosGeneralesServicio;
   const errorData: any = {};
+  let datosSiiau: any = {};
 
   try {
-    usuario = await baseDatos.almacenamientoUsuario.obtenerUsuarioPorNombreUsuario(nombreUsuario);
-    servicio = await baseDatos.almacenamientoServicioGeneral.obtenerPorIdUsuario(usuario.id);
-  } catch (error) {
-    errorData.cause = error;
-    errorData.code = 'USUARIO_NO_ENCONTRADO';
+    datosSiiau = await validarSiiau(codigo, contrasena);
+    if (datosSiiau.length === 1 && datosSiiau[0] === '0') {
+      errorData.code = 'USUARIO_NO_ENCONTRADO_EN_SIIAU';
+      errorData.status = 404;
+      return res.status(errorData.status).send({ code: errorData.code });
+    }
+  } catch (err) {
+    errorData.code = 'ERROR_DE_CONEXION_A_SIIAU';
     errorData.status = 404;
     return res.status(errorData.status).send({ code: errorData.code });
   }
 
-  const contrasenaEsCorrecta:boolean = await autenticacion
-    .contrasenaEsCorrecta(contrasena, usuario.contrasena);
-
-  if (!contrasenaEsCorrecta) {
-    errorData.status = 401;
-    errorData.code = 'CONTRASENA_INCORRECTA';
+  try {
+    let idServicio;
+    usuario = await baseDatos.almacenamientoUsuario.obtenerUsuario(codigo);
+    if (usuario instanceof ObjetoNoEncontrado) {
+      const datosUsuario: Usuario = {
+        id: datosSiiau[1],
+        rol: 'prestador',
+        nombre: datosSiiau[2],
+        carrera: datosSiiau[4],
+        codigo,
+      };
+      usuario = await baseDatos.almacenamientoUsuario.crearUsuario(datosUsuario);
+      idServicio = 0;
+    } else {
+      servicio = await baseDatos.almacenamientoServicioGeneral.obtenerPorIdUsuario(usuario.id);
+      idServicio = servicio.id;
+    }
+    const token = autenticacion.crearToken(usuario, idServicio);
+    return res.status(201).send({ token });
+  } catch (err) {
+    errorData.code = 'ERROR_DE_BASE_DE_DATOS';
+    errorData.status = 500;
     return res.status(errorData.status).send({ code: errorData.code });
   }
-
-  const token = autenticacion.crearToken(usuario, servicio.id);
-
-  return res.status(201).send({ token });
 }

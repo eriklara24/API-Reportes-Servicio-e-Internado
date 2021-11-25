@@ -50,32 +50,6 @@ export default class AlmacenamientoReporteFinalDos {
       return promesaReporteFinalDos;
     }
 
-    async obtenerReporteFinalDos(id: number): Promise<ReporteFinalDos> {
-      const consulta = 'SELECT * FROM reporte_final WHERE id=?';
-      const promesaReporteFinalDos: any = await new Promise((resolve, reject) => {
-        this.conection.query(consulta, [String(id)], (err, res) => {
-          if (err) {
-            reject(err);
-          } else if (res.length < 1) {
-            reject(new ObjetoNoEncontrado());
-          } else {
-            const reporteFinalDos = {
-              id: res[0].id,
-              idServicio: res[0].servicio_id,
-              metasAlcanzadas: res[0].metas_alcanzadas,
-              metodologiaUtilizada: res[0].metodologia,
-              innovacionAportada: res[0].innovacion,
-              conclusiones: res[0].conclusion,
-              propuestas: res[0].propuestas,
-            };
-            resolve(reporteFinalDos);
-          }
-        });
-      });
-
-      return promesaReporteFinalDos;
-    }
-
     public async obtenerPorIdUsuario(idUsuario: number): Promise<ReporteFinalDos> {
       const select = 'SELECT reporte_final.* FROM servicio '
       + 'JOIN reporte_final ON reporte_final.servicio_id = servicio.id '
@@ -133,22 +107,5 @@ export default class AlmacenamientoReporteFinalDos {
       });
 
       return promesaReporteFinalDos;
-    }
-
-    async eliminarReporteFinalDos(id: number): Promise<boolean> {
-      const consulta = 'DELETE FROM reporte_final WHERE id=?';
-      const promesaReporteParcial: any = await new Promise((resolve, reject) => {
-        this.conection.query(consulta, [String(id)], (err, res) => {
-          if (err) {
-            reject(err);
-          } else if (res.affectedRows < 1) {
-            reject(new ObjetoNoEncontrado());
-          } else {
-            resolve(true);
-          }
-        });
-      });
-
-      return promesaReporteParcial;
     }
 }

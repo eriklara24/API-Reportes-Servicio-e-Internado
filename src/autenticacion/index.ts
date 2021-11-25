@@ -9,7 +9,9 @@ export interface TokenUsuario {
     id: number,
     idServicio: number,
     rol: _Roles,
-    nombreUsuario: string,
+    nombre: string,
+    carrera: string,
+    codigo: string
   }
   exp: number
 }
@@ -24,7 +26,9 @@ class Autenticacion {
         id: usuario.id,
         idServicio,
         rol: usuario.rol,
-        nombreUsuario: usuario.nombreUsuario,
+        nombre: usuario.nombre,
+        carrera: usuario.carrera,
+        codigo: usuario.codigo,
       },
       exp: this.calcularTiempoExpiracion(),
     };
@@ -45,7 +49,9 @@ class Autenticacion {
         id: 0,
         idServicio: 0,
         rol: null,
-        nombreUsuario: '',
+        nombre: '',
+        carrera: '',
+        codigo: '',
       },
       exp: 0,
     };
@@ -72,7 +78,9 @@ class Autenticacion {
       id: tokenDecodificado.usuario.id,
       idServicio: tokenDecodificado.usuario.idServicio,
       rol: tokenDecodificado.usuario.rol,
-      nombreUsuario: tokenDecodificado.usuario.nombreUsuario,
+      nombre: tokenDecodificado.usuario.nombre,
+      carrera: tokenDecodificado.usuario.carrera,
+      codigo: tokenDecodificado.usuario.codigo,
     };
 
     return next();
