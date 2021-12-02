@@ -30,6 +30,12 @@ export default async function (req: any, res: any) {
     return res.status(errorData.status).send({ code: errorData.code });
   }
 
+  if (datosSiiau.length < 4) {
+    errorData.code = 'ERROR_DE_CONEXION_A_SIIAU';
+    errorData.status = 404;
+    return res.status(errorData.status).send({ code: errorData.code });
+  }
+
   try {
     let idServicio;
     usuario = await baseDatos.almacenamientoUsuario.obtenerUsuario(codigo);
