@@ -8,9 +8,7 @@ const cors = require('cors');
 
 const APIServer = express();
 
-if (config.ambiente === 'develop') {
-  APIServer.use(cors({ 'Access-Control-Allow-Origin': '*' }));
-}
+APIServer.use(cors({ 'Access-Control-Allow-Origin': '*' }));
 
 APIServer.use('/public', publicRouter);
 
