@@ -5,9 +5,22 @@ import publicRouter from './src/endpoints/public';
 
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
 
 const APIServer = express();
 
+APIServer.use(helmet.contentSecurityPolicy());
+APIServer.use(helmet.dnsPrefetchControl());
+APIServer.use(helmet.expectCt());
+APIServer.use(helmet.frameguard());
+APIServer.use(helmet.hidePoweredBy());
+APIServer.use(helmet.hsts());
+APIServer.use(helmet.ieNoOpen());
+APIServer.use(helmet.noSniff());
+APIServer.use(helmet.originAgentCluster());
+APIServer.use(helmet.permittedCrossDomainPolicies());
+APIServer.use(helmet.referrerPolicy());
+APIServer.use(helmet.xssFilter());
 APIServer.use(cors({ 'Access-Control-Allow-Origin': '*' }));
 
 APIServer.use('/public', publicRouter);
