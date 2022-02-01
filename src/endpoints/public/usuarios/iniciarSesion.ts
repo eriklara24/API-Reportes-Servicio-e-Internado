@@ -20,7 +20,7 @@ export default async function (req: any, res: any) {
   try {
     datosSiiau = await validarSiiau(codigo, nip);
     if (datosSiiau.length === 1 && datosSiiau[0] === '0') {
-      errorData.code = 'USUARIO_NO_ENCONTRADO_EN_SIIAU';
+      errorData.code = 'NO_SE_ENCONTRO_EL_USUARIO_O_LA_CONTRASENA_ES_INCORRECTA';
       errorData.status = 404;
       return res.status(errorData.status).send({ code: errorData.code });
     }
