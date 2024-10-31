@@ -3,6 +3,7 @@ import baseDatos from '../../../database';
 
 export default async function actualizarReporteFinalDos(req: any, res: any) {
   const { usuario } = req;
+
   try {
     const reporteFinalDosActualizado = await baseDatos
       .almacenamientoReporteFinalDos.actualizarReporteFinalDos({
@@ -13,11 +14,14 @@ export default async function actualizarReporteFinalDos(req: any, res: any) {
         innovacionAportada: req.body.innovacionAportada,
         conclusiones: req.body.conclusiones,
         propuestas: req.body.propuestas,
-        actividadesRealizadas: [],
-        atencionesRealizadas: [],
       });
+
     return res.status(201).send(reporteFinalDosActualizado);
   } catch (err) {
+    if (err.errno === 1292) {
+      return res.status(404).send({ codigo: 'DATOS_INVALIDOS' });
+    }
+
     return res.status(404).send(err);
   }
 }

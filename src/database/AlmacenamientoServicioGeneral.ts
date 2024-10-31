@@ -10,7 +10,7 @@
  */
 
 import mysql = require('mysql');
-import ServicioEInternado from '../resources/interfaces/ServicioEInternado';
+import DatosGeneralesServicio from '../resources/models/DatosGeneralesServicio';
 import ObjetoNoEncontrado from './errors/ObjetoNoEncontrado';
 
 export default class AlmacenamientoServicioGeneral {
@@ -24,7 +24,7 @@ export default class AlmacenamientoServicioGeneral {
     }
 
     /** Insertar valores en la tabla servicio de MySQL */
-    public async crearServicioGeneral(servicio: ServicioEInternado): Promise<ServicioEInternado> {
+    public async crearServicioGeneral(servicio: DatosGeneralesServicio): Promise<DatosGeneralesServicio> {
       const consulta = 'INSERT INTO servicio(usuario_id, entidad_receptora, receptor, programa,'
       + 'objetivos_programa, fecha_inicio, fecha_fin, horario_hora_inicio, horario_hora_fin)'
       + 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
@@ -65,7 +65,7 @@ export default class AlmacenamientoServicioGeneral {
     }
 
     /** Obtener todos los valores de la tabla servicio de MySQL */
-    public async obtenerServicioGeneral(id: number): Promise<ServicioEInternado> {
+    public async obtenerServicioGeneral(id: number): Promise<DatosGeneralesServicio> {
       const consulta = 'SELECT * FROM servicio WHERE id=?';
       const args = [id];
       const selectInfo: any = await new Promise((resolve, reject) => {
@@ -75,7 +75,7 @@ export default class AlmacenamientoServicioGeneral {
           } else if (res.length < 1) {
             reject(new ObjetoNoEncontrado());
           } else {
-            const datosServicio: ServicioEInternado = {
+            const datosServicio: DatosGeneralesServicio = {
               id: res[0].id,
               idUsuario: res[0].usuario_id,
               entidadReceptora: res[0].entidad_receptora,
@@ -96,7 +96,7 @@ export default class AlmacenamientoServicioGeneral {
     }
 
     /** Método para obtener los datos generales de un servicio a partir de un ID de usuario */
-    public async obtenerPorIdUsuario(idUsuario: number): Promise<ServicioEInternado> {
+    public async obtenerPorIdUsuario(idUsuario: number): Promise<DatosGeneralesServicio> {
       const consulta = 'SELECT * FROM `servicio` WHERE usuario_id = ?';
       const promise: any = await new Promise((resolve, reject) => {
         this.conexion.query(consulta, [idUsuario], (err, res) => {
@@ -105,7 +105,7 @@ export default class AlmacenamientoServicioGeneral {
           } else if (res.length < 1) {
             resolve(false);
           } else {
-            const datos: ServicioEInternado = {
+            const datos: DatosGeneralesServicio = {
               id: res[0].id,
               idUsuario: res[0].usuario_id,
               entidadReceptora: res[0].entidad_receptora,
@@ -126,10 +126,11 @@ export default class AlmacenamientoServicioGeneral {
     }
 
     /** Actualizar todos los valores de un campo de la tabla servicio de MySQL */
-    public async actualizarServicioGeneral(servicio: ServicioEInternado): Promise<ServicioEInternado> {
+    public async actualizarServicioGeneral(servicio: DatosGeneralesServicio): Promise<DatosGeneralesServicio> {
       const consulta = 'UPDATE servicio SET usuario_id=?, entidad_receptora=?, receptor=?, programa=?,'
       + 'objetivos_programa=?, fecha_inicio=?, fecha_fin=?, horario_hora_inicio=?,'
       + 'horario_hora_fin=? WHERE id=?';
+
       const args = [
         servicio.idUsuario,
         servicio.entidadReceptora,
@@ -142,6 +143,7 @@ export default class AlmacenamientoServicioGeneral {
         servicio.horarioHoraFin,
         servicio.id,
       ];
+
       const updateInfo: any = await new Promise((resolve, reject) => {
         this.conexion.query(consulta, args, (err, res) => {
           if (err) {

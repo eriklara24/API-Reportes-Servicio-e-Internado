@@ -7,7 +7,7 @@
  */
 
 import mysql = require('mysql');
-import ActividadesDeUsuario from '../resources/interfaces/ActividadesDeUsuario';
+import ActividadesDeUsuario from '../resources/models/ActividadesDeUsuario';
 import ObjetoNoEncontrado from './errors/ObjetoNoEncontrado';
 
 export default class AlmacenamientoActividadDeUsuario {

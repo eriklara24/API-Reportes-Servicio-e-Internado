@@ -9,9 +9,9 @@
 
 /** Import's de todas las interfaces necesarias para la construcción de la entidad.
  */
-import ReporteParcial from '../interfaces/ReporteParcial';
-import ReporteFinalDos from '../interfaces/ReporteFinalDos';
-import ActividadesDeUsuario from '../interfaces/ActividadesDeUsuario';
+import ReporteParcial from './ReporteParcial';
+import ReporteFinalDos from './ReporteFinalDos';
+import ActividadesDeUsuario from './ActividadesDeUsuario';
 
 /** Entidad de Servicio. Contiene toda la información e interfaces que conforman
  * un servicio social o internado.

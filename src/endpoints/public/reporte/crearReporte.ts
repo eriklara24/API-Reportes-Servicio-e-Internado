@@ -5,12 +5,12 @@
 
 import baseDatos from '../../../database';
 import ObjetoNoEncontrado from '../../../database/errors/ObjetoNoEncontrado';
-import ActividadesDeUsuario from '../../../resources/interfaces/ActividadesDeUsuario';
-import ActividadesRealizadas from '../../../resources/interfaces/ActividadesRealizadas';
-import AtencionesRealizadas from '../../../resources/interfaces/AtencionesRealizadas';
-import ServicioEInternado from '../../../resources/interfaces/ServicioEInternado';
-import Trimestre from '../../../resources/interfaces/Trimestre';
-import ReporteParcial from '../../../resources/interfaces/ReporteParcial';
+import ActividadesDeUsuario from '../../../resources/models/ActividadesDeUsuario';
+import ActividadesRealizadas from '../../../resources/models/ActividadesRealizadas';
+import AtencionesRealizadas from '../../../resources/models/AtencionesRealizadas';
+import DatosGeneralesServicio from '../../../resources/models/DatosGeneralesServicio';
+import Trimestre from '../../../resources/models/Trimestre';
+import ReporteParcial from '../../../resources/models/ReporteParcial';
 
 function obtenerFecha(): string {
   const fecha = new Date();
@@ -34,7 +34,7 @@ export default async function crearReporte(req: any, res: any) {
   let actividadesDeUsuario: any[] = [];
   let atencionesRealizadas: any[] = [];
   let horasRealizadas = 0;
-  let servicio: ServicioEInternado;
+  let servicio: DatosGeneralesServicio;
   let trimestres: Trimestre[] = [];
   let reportes: ReporteParcial[] = [];
   let nuevoReporte: ReporteParcial;
@@ -47,7 +47,7 @@ export default async function crearReporte(req: any, res: any) {
     atencionesRealizadas = req.body.atencionesRealizadas;
     horasRealizadas = req.body.horasRealizadas;
   } catch (err) {
-    return res.status(400).send({ code: 'Error: datos enviados no son válidos' });
+    return res.status(400).send({ code: 'DATOS_INVALIDOS' });
   }
 
   // 2.- Obtener los datos del servicio del usuario.
@@ -55,9 +55,9 @@ export default async function crearReporte(req: any, res: any) {
     servicio = await baseDatos.almacenamientoServicioGeneral.obtenerServicioGeneral(idServicio);
   } catch (err) {
     if (err instanceof ObjetoNoEncontrado) {
-      return res.status(404).send({ code: 'Error: datos generales de servicio no creados' });
+      return res.status(404).send({ code: 'SERVICIO_NO_ENCONTRADO' });
     }
-    return res.status(500).send({ code: 'Error de base de datos' });
+    return res.status(500).send({ code: 'ERROR_DE_BASE_DE_DATOS' });
   }
 
   // 3.- Obtener los trimestres de este servicio
@@ -65,29 +65,45 @@ export default async function crearReporte(req: any, res: any) {
     trimestres = await baseDatos.almacenamientoTrimestre
       .obtenerPorFechas(servicio.fechaInicio, servicio.fechaFin);
   } catch (err) {
-    return res.status(500).send({ code: 'Error de base de datos' });
+    return res.status(500).send({ code: 'ERROR_AL_OBTENER_TRIMESTRES' });
+  }
+
+  try {
+    reportes = await baseDatos.almacenamientoReporteParcial.obtenerReportesPorIdUsuario(idUsuario);
+  } catch (err) {
+    return res.status(500).send({ code: 'ERROR_AL_OBTENER_REPORTES' });
   }
 
   // 4.- Obtener los reportes ya creados y crear el nuevo reporte.
+
   try {
-    reportes = await baseDatos.almacenamientoReporteParcial.obtenerReportesPorIdUsuario(idUsuario);
     if (reportes.length >= 4) {
-      return res.status(404).send({ code: 'Error: todos los reportes ya creados.' });
+      return res.status(404).send({ code: 'NUMERO_DE_REPORTE_NO_VALIDO' });
     }
+
     if (trimestres.length < reportes.length + 1) { // No existe trimestre para este reporte
-      return res.status(404).send({ code: 'Error: trimestre para este reporte no creado.' });
+      return res.status(404).send({ code: 'EL_TRIMESTRE_CORRESPONDIENTE_NO_EXISTE: Revisa las fechas del servicio' });
     }
-    if (req.body.numeroReporte - 1 !== reportes.length) { // El anterior tiene que estar creado
-      return res.status(404).send({ code: 'Error: El reporte anterior no ha sido creado.' });
+
+    if (Number(req.params.numeroReporte) === reportes.length) { // El anterior tiene que estar creado
+      return res.status(404).send({ code: 'ESTE_REPORTE_YA_HA_SIDO_CREADO.' });
     }
+
+    if (Number(req.params.numeroReporte) > reportes.length + 1) { // El anterior tiene que estar creado
+      return res.status(404).send({ code: 'EL_REPORTE_ANTERIOR_NO_HA_SIDO_CREADO' });
+    }
+
     // El reporte se debe crear en una fecha igual o posterior al fin de su trimestre
     if (!esFechaPosterior(obtenerFecha(), trimestres[reportes.length].fechaFin)) {
-      return res.status(404).send({ code: 'Error: La fecha para crear el reporte no ha pasado.' });
+      return res.status(404).send({ code: 'AUN_NO_PUEDES_REALIZAR_ESTE_REPORTE' });
     }
-    const idTrimestre = trimestres[reportes.length].id;
+
     const actualizado = obtenerFecha();
     const dummy: ActividadesRealizadas[] = []; // Necesarios en la interfaz, pero no para la DB
     const dummy2: AtencionesRealizadas[] = []; // En la inserción son ignorados.
+
+    const idTrimestre = trimestres[reportes.length].id;
+
     nuevoReporte = {
       id: 0,
       idServicio,
@@ -97,14 +113,20 @@ export default async function crearReporte(req: any, res: any) {
       actividadesRealizadas: dummy,
       atencionesRealizadas: dummy2,
     };
+
     nuevoReporte = await baseDatos.almacenamientoReporteParcial.crearReporteParcial(nuevoReporte);
   } catch (err) {
-    return res.status(500).send(err);
+    if (err.errno === 1366) {
+      return res.status(404).send({ codigo: 'DATOS_INVALIDOS' });
+    }
+
+    return res.status(500).send('ERROR_AL_CREAR_REPORTE');
   }
 
-  // // 5.- Guardar las atenciones con los datos del servicio y el nuevo reporte.
+  // 6.- Guardar las atenciones con los datos del servicio y el nuevo reporte.
   try {
     const idNuevoReporte = nuevoReporte.id;
+
     for (let i = 0; i < atencionesRealizadas.length; i += 1) {
       let nuevaAtencion: AtencionesRealizadas = {
         id: 0,
@@ -113,15 +135,21 @@ export default async function crearReporte(req: any, res: any) {
         tipo: i,
         cantidad: atencionesRealizadas[i].cantidad,
       };
+
       nuevaAtencion = await baseDatos.almacenamientoAtencionRealizada
         .crearAtencionRealizada(nuevaAtencion); // Se almacena por cuestión de la promesa, aunque no se vuelve a usuar.
+
       nuevoReporte.atencionesRealizadas.push(nuevaAtencion);
     }
   } catch (err) {
-    return res.status(500).send({ code: 'Error de base de datos' });
+    if (err.errno === 1366) {
+      return res.status(404).send({ codigo: 'DATOS_INVALIDOS' });
+    }
+
+    return res.status(500).send({ code: 'ERROR_AL_CREAR_ATENCIONES' });
   }
 
-  // // 6.- Guardar actividades de usuario y actividades realizadas con los datos en variables.
+  // 7.- Guardar actividades de usuario y actividades realizadas con los datos en variables.
   try {
     for (let i = 0; i < actividadesDeUsuario.length; i += 1) {
       let idActividadDeUsuario = 0;
@@ -143,12 +171,18 @@ export default async function crearReporte(req: any, res: any) {
         idReporteParcial: nuevoReporte.id,
         cantidad: actividadesDeUsuario[i].cantidad,
       };
+
       nuevaRealizada = await baseDatos.almacenamientoActividadRealizada
         .crearActividadRealizada(nuevaRealizada);
       nuevoReporte.actividadesRealizadas.push(nuevaRealizada);
     }
   } catch (err) {
-    return res.status(500).send({ code: 'Error de base de datos' });
+    if (err.errno === 1366) {
+      return res.status(404).send({ codigo: 'DATOS_INVALIDOS' });
+    }
+
+    return res.status(500).send({ code: 'ERROR_AL_CREAR_ACTIVIDADES' });
   }
-  return res.status(201).send({ reporte: nuevoReporte });
+
+  return res.status(201).send(nuevoReporte);
 }

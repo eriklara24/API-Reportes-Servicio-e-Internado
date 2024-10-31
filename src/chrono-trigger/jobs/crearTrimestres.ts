@@ -6,8 +6,8 @@
  */
 
 import database from '../../database';
-import _CronJob from '../../resources/interfaces/CronJob';
-import Trimestre from '../../resources/interfaces/Trimestre';
+import _CronJob from '../../resources/models/CronJob';
+import Trimestre from '../../resources/models/Trimestre';
 
 function obtenerAnio(): number {
   const fecha = new Date();
@@ -51,10 +51,13 @@ async function crearTrimestres() {
     console.log('ERROR: TAREA NO COMPLETADA, NO SE PUDIERON CREAR LOS TRIMESTRES.');
     throw err;
   }
+
+  // eslint-disable-next-line no-console
+  console.log('Se crearon todos los trimestres del año con exito');
 }
 
 const cronJob: _CronJob = {
-  cron: '* 0 1 1 *', // cualquier minuto de la hora 0, del día 1 del mes 1 de cualquier año
+  cron: '0 0 1 1 *', // minuto 0, de la hora 0, del día 1 del mes 1 de cualquier año
   job: () => {
     crearTrimestres();
   },

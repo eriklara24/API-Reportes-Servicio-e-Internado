@@ -1,10 +1,10 @@
 import config from '../../configuracion';
-import _Usuario, { Roles as _Roles } from '../resources/entities/Usuario';
+import _Usuario, { Roles as _Roles } from '../resources/models/Usuario';
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-interface TokenUsuario {
+export interface TokenUsuario {
   usuario: {
     id: number,
     idServicio: number,
@@ -58,14 +58,14 @@ class Autenticacion {
       );
     } catch (error) {
       if (error.message === 'jwt expired') {
-        return res.status(401).send({ code: 'JWT_EXPIRED' });
+        return res.status(401).send({ code: 'SESION_EXPIRADA' });
       }
 
       return res.status(401).send({ error, code: 'BAD_JWT_TOKEN' });
     }
 
     if (!rolesAllowed.includes(tokenDecodificado.usuario.rol)) {
-      return res.status(401).send({ code: 'UNAUTHORIZED' });
+      return res.status(401).send({ code: 'USUARIO_NO_AUTORIZADO' });
     }
 
     req.usuario = {

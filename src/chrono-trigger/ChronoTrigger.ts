@@ -7,7 +7,7 @@
  * Escrito por Ramón Paredes Sánchez.
  */
 
-import _CronJob from '../resources/interfaces/CronJob';
+import _CronJob from '../resources/models/CronJob';
 
 const schedule = require('node-schedule');
 

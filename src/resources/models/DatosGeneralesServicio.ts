@@ -2,7 +2,7 @@
  * Escrito por Ramón Paredes Sánchez.
  */
 
-interface ServicioEInternado {
+interface DatosGeneralesServicio {
   id: number;
   idUsuario: number;
   entidadReceptora: string;
@@ -15,4 +15,4 @@ interface ServicioEInternado {
   horarioHoraFin: string;
 }
 
-export default ServicioEInternado;
+export default DatosGeneralesServicio;

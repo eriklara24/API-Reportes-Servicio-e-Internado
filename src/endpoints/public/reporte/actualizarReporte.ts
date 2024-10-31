@@ -2,10 +2,10 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable max-len */
 import baseDatos from '../../../database';
-import ActividadesDeUsuario from '../../../resources/interfaces/ActividadesDeUsuario';
-import ActividadesRealizadas from '../../../resources/interfaces/ActividadesRealizadas';
-import AtencionesRealizadas from '../../../resources/interfaces/AtencionesRealizadas';
-import ReporteParcial from '../../../resources/interfaces/ReporteParcial';
+import ActividadesDeUsuario from '../../../resources/models/ActividadesDeUsuario';
+import ActividadesRealizadas from '../../../resources/models/ActividadesRealizadas';
+import AtencionesRealizadas from '../../../resources/models/AtencionesRealizadas';
+import ReporteParcial from '../../../resources/models/ReporteParcial';
 
 function obtenerFecha(): string {
   const fecha = new Date();
@@ -36,27 +36,28 @@ export default async function actualizarReporte(req: any, res: any) {
     numeroReporte = req.params.numeroReporte;
 
     if (numeroReporte < 1 || numeroReporte > 4) {
-      return res.status(404).send({ code: 'Error: número de reporte no válido' });
+      return res.status(404).send({ code: 'NUMERO_REPORTE_NO_VALIDO' });
     }
   } catch (err) {
-    return res.status(400).send({ code: 'Error: datos enviados no son válidos' });
+    return res.status(400).send({ code: 'DATOS_ENVIADOS_NO_SON_VALIDOS' });
   }
 
   // 2.- Validar que exista el servicio
   try {
     if (!await baseDatos.almacenamientoServicioGeneral.obtenerPorIdUsuario(idUsuario)) {
-      return res.status(404).send({ code: 'Error: datos generales de servicio no creados' });
+      return res.status(404).send({ code: 'SERVICIO_NO_ENCONTRADO' });
     }
   } catch (err) {
-    return res.status(500).send({ code: 'Error de base de datos' });
+    return res.status(500).send({ code: 'ERROR_AL_OBTENER_SERVICIO' });
   }
 
-  // 3.- Actualizar fecha del reporte
+  // 3.- Actualizar reporte
   try {
     const reportes = await baseDatos.almacenamientoReporteParcial.obtenerReportesPorIdUsuario(idUsuario);
     if (reportes.length < numeroReporte) {
-      return res.status(404).send({ code: 'Error: reporte no creado' });
+      return res.status(404).send({ code: 'REPORTE_NO_ENCONTRADO' });
     }
+
     nuevoReporte = reportes[numeroReporte - 1];
     const auxReporte: ReporteParcial = {
       id: nuevoReporte.id,
@@ -67,12 +68,17 @@ export default async function actualizarReporte(req: any, res: any) {
       actividadesRealizadas: [],
       atencionesRealizadas: [],
     };
+
     nuevoReporte = await baseDatos.almacenamientoReporteParcial.actualizarReporteParcial(auxReporte);
   } catch (err) {
-    return res.status(500).send({ code: 'Error de base de datos' });
+    if (err.errno === 1292) {
+      return res.status(404).send({ codigo: 'DATOS_INVALIDOS' });
+    }
+
+    return res.status(500).send({ code: 'ERROR_AL_ACTUALIZAR_REPORTE' });
   }
 
-  // 5.- Eliminar actividades realizadas y atenciones realizadas anteriores
+  // 4.- Eliminar actividades realizadas y atenciones realizadas anteriores
   try {
     const auxActividadesRealizadas = await baseDatos.almacenamientoActividadRealizada
       .obtenerPorIDReporte(nuevoReporte.id);
@@ -87,10 +93,10 @@ export default async function actualizarReporte(req: any, res: any) {
         .eliminarAtencionRealizada(auxAtencionesRealizadas[i].id);
     }
   } catch (err) {
-    return res.status(500).send({ code: 'Error de base de datos' });
+    return res.status(500).send({ code: 'ERROR_AL_ACTUALIZAR_ACTIVIDADES_Y_ATENCIONES' });
   }
 
-  // 6.- Insertar nuevas atenciones realizadas y nuevas actividades realizadas
+  // 5.- Insertar nuevas atenciones realizadas y nuevas actividades realizadas
   try {
     const idNuevoReporte = nuevoReporte.id;
     for (let i = 0; i < atencionesRealizadas.length; i += 1) {
@@ -101,17 +107,23 @@ export default async function actualizarReporte(req: any, res: any) {
         tipo: i,
         cantidad: atencionesRealizadas[i].cantidad,
       };
+
       nuevaAtencion = await baseDatos.almacenamientoAtencionRealizada
         .crearAtencionRealizada(nuevaAtencion); // Se almacena por cuestión de la promesa, aunque no se vuelve a usuar.
       nuevoReporte.atencionesRealizadas.push(nuevaAtencion);
     }
   } catch (err) {
-    return res.status(500).send({ code: 'Error de base de datos' });
+    if (err.errno === 1366) {
+      return res.status(404).send({ codigo: 'DATOS_INVALIDOS' });
+    }
+
+    return res.status(500).send({ code: 'ERROR_AL_ACTUALIZAR_ACTIVIDADES_Y_ATENCIONES' });
   }
 
   try {
     for (let i = 0; i < actividadesDeUsuario.length; i += 1) {
       let idActividadDeUsuario = 0;
+
       if (actividadesDeUsuario[i].id !== 0) { // ya existe, solo crear realizadas
         idActividadDeUsuario = actividadesDeUsuario[i].id;
       } else { // si no existe
@@ -120,10 +132,12 @@ export default async function actualizarReporte(req: any, res: any) {
           idServicio,
           descripcion: actividadesDeUsuario[i].descripcion,
         };
+
         const actividadCreada = await baseDatos.almacenamientoActividadDeUsuario
           .crearActividadDeUsuario(nuevaActividad);
         idActividadDeUsuario = actividadCreada.id;
       }
+
       let nuevaRealizada: ActividadesRealizadas = {
         id: 0,
         idActividad: idActividadDeUsuario,
@@ -136,7 +150,12 @@ export default async function actualizarReporte(req: any, res: any) {
       nuevoReporte.actividadesRealizadas.push(nuevaRealizada);
     }
   } catch (err) {
-    return res.status(500).send({ code: 'Error de base de datos' });
+    if (err.errno === 1366) {
+      return res.status(404).send({ codigo: 'DATOS_INVALIDOS' });
+    }
+
+    return res.status(500).send({ code: 'ERROR_DE_BASE_DE_DATOS' });
   }
-  return res.status(201).send({ reporte: nuevoReporte });
+
+  return res.status(201).send({ ...nuevoReporte });
 }

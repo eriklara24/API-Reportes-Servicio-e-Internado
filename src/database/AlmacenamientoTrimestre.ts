@@ -1,7 +1,7 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable no-useless-catch */
 import mysql = require('mysql');
-import Trimestre from '../resources/interfaces/Trimestre';
+import Trimestre from '../resources/models/Trimestre';
 import ObjetoNoEncontrado from './errors/ObjetoNoEncontrado';
 
 export default class AlmacenamientoTrimestre {

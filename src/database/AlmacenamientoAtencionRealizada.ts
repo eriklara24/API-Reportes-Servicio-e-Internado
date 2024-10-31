@@ -9,7 +9,7 @@
  */
 
 import mysql = require('mysql');
-import AtencionesRealizadas from '../resources/interfaces/AtencionesRealizadas';
+import AtencionesRealizadas from '../resources/models/AtencionesRealizadas';
 import ObjetoNoEncontrado from './errors/ObjetoNoEncontrado';
 
 export default class AlmacenamientoAtencionRealizada {

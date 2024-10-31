@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 /* eslint-disable max-len */
 /* Archivo y función para obtener todos los datos de un servicio completo
  * Incluye llamadas a métodos que permiten obtener todos los datos con relación a
@@ -7,27 +6,38 @@
  * Escrito por Ramón Paredes Sánchez.
  */
 import baseDatos from '../../../database';
-import Servicio from '../../../resources/entities/Servicio';
-import Trimestre from '../../../resources/interfaces/Trimestre';
+import Servicio from '../../../resources/models/Servicio';
+import SolicitudPersonalizada from '../../../resources/models/Request';
+import Trimestre from '../../../resources/models/Trimestre';
 
-export default async function obtenerCompleto(req: any, res: any) {
-  const { usuarioId } = req.params;
+export default async function obtenerCompleto(req: SolicitudPersonalizada, res: any) {
+  let generales;
+
   try {
-    const generales = await baseDatos.almacenamientoServicioGeneral.obtenerPorIdUsuario(usuarioId);
+    generales = await baseDatos.almacenamientoServicioGeneral.obtenerPorIdUsuario(req.usuario.id);
+
     if (!generales) {
-      return res.status(404).send({ code: 'Servicio no encontrado' });
+      return res.status(404).send({ code: 'SERVICIO_NO_ENCONTRADO' });
     }
-    const parciales = await baseDatos.almacenamientoReporteParcial.obtenerReportesPorIdUsuario(usuarioId);
+  } catch (err) {
+    return res.status(500).send({ code: 'ERROR_DE_BASE_DE_DATOS' });
+  }
+
+  try {
+    const parciales = await baseDatos.almacenamientoReporteParcial.obtenerReportesPorIdUsuario(req.usuario.id);
+
     const reportesParciales: any[] = [];
-    parciales.forEach(async (element) => {
+    await Promise.all(parciales.map(async (element: any) => {
       const trimestre: Trimestre = await baseDatos.almacenamientoTrimestre.obtenerTrimestre(element.idTrimestre);
       const reporte : any = element;
       reporte.fechaInicio = trimestre.fechaInicio;
       reporte.fechaFin = trimestre.fechaFin;
       reportesParciales.push(reporte);
-    });
-    const final = await baseDatos.almacenamientoReporteFinalDos.obtenerPorIdUsuario(usuarioId);
-    const actividades = await baseDatos.almacenamientoActividadDeUsuario.obtenerPorIdUsuario(usuarioId);
+    }));
+
+    const final = await baseDatos.almacenamientoReporteFinalDos.obtenerPorIdUsuario(req.usuario.id);
+    const actividades = await baseDatos.almacenamientoActividadDeUsuario.obtenerPorIdUsuario(req.usuario.id);
+
     const servicio : Servicio = {
       id: generales.id,
       idUsuario: generales.idUsuario,
@@ -43,8 +53,9 @@ export default async function obtenerCompleto(req: any, res: any) {
       reporteFinalDos: final,
       actividadesDeUsuario: actividades,
     };
+
     return res.status(200).send(servicio);
   } catch (err) {
-    return res.status(500).send({ code: 'Error de base de datos' });
+    return res.status(500).send({ code: 'ERROR_DE_BASE_DE_DATOS' });
   }
 }

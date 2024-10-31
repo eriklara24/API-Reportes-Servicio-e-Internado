@@ -1,7 +1,7 @@
-import Usuario from '../../../resources/entities/Usuario';
+import Usuario from '../../../resources/models/Usuario';
 import baseDatos from '../../../database';
 import autenticacion from '../../../autenticacion';
-import ServicioEInternado from '../../../resources/interfaces/ServicioEInternado';
+import DatosGeneralesServicio from '../../../resources/models/DatosGeneralesServicio';
 
 export default async function (req: any, res: any) {
   const {
@@ -11,7 +11,7 @@ export default async function (req: any, res: any) {
   const { nombreUsuario, contrasena } = body;
 
   let usuario: Usuario;
-  let servicio: ServicioEInternado;
+  let servicio: DatosGeneralesServicio;
   const errorData: any = {};
 
   try {

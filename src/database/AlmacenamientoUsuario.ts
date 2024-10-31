@@ -1,7 +1,7 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable no-useless-catch */
 import mysql = require('mysql');
-import Usuario from '../resources/entities/Usuario';
+import Usuario from '../resources/models/Usuario';
 import ObjetoNoEncontrado from './errors/ObjetoNoEncontrado';
 
 export default class AlmacenamientoUsuario {
@@ -48,13 +48,16 @@ export default class AlmacenamientoUsuario {
           } else if (res.length < 1) {
             reject(new ObjetoNoEncontrado());
           } else {
-            const usuario = {
+            const usuario: Usuario = {
               id: res[0].id,
               rol: res[0].rol,
               nombreUsuario: res[0].nombreUsuario,
               contrasena: res[0].contrasena,
               preguntaSeguridadUno: res[0].preguntaSeguridadUno,
               preguntaSeguridadDos: res[0].preguntaSeguridadDos,
+              nombre: res[0].nombre,
+              carrera: res[0].carrera,
+              codigo: res[0].codigo,
             };
 
             resolve(usuario);
@@ -74,13 +77,16 @@ export default class AlmacenamientoUsuario {
           } else if (res.length < 1) {
             reject(new ObjetoNoEncontrado());
           } else {
-            const usuario = {
+            const usuario: Usuario = {
               id: res[0].id,
               rol: res[0].rol,
               nombreUsuario: res[0].nombreUsuario,
               contrasena: res[0].contrasena,
               preguntaSeguridadUno: res[0].preguntaSeguridadUno,
               preguntaSeguridadDos: res[0].preguntaSeguridadDos,
+              nombre: res[0].nombre,
+              carrera: res[0].carrera,
+              codigo: res[0].codigo,
             };
 
             resolve(usuario);
@@ -107,6 +113,7 @@ export default class AlmacenamientoUsuario {
           } else if (res.affectedRows < 1) {
             reject(new ObjetoNoEncontrado());
           } else {
+            console.log(res);
             resolve(usuario);
           }
         });
